@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-import requests
 from flask import Flask, current_app, g
-
-from hat.client import ApiGetToken
 
 
 def make_app() -> Flask:
@@ -26,17 +23,13 @@ def _ensure_instance_folder_exists() -> None:
 
 def _set_hat_client() -> None:
     if "hat_client" not in g:
-        from hat import HatClient
-        from .settings import config
-        g.hat_client = HatClient(
-            username=config.hat_username,
-            namespace=config.hat_namespace,
-            session=(session := requests.session()),
-            token=ApiGetToken(config.hat_credential, session))
+        from hat import HatClient, ApiOwnerToken
+        from settings import config
+        g.hat_client = HatClient(ApiOwnerToken(config.hat_credential))
 
 
 def _add_routes() -> None:
-    from . import routes
+    import routes
     routes.add_routes()
 
 
