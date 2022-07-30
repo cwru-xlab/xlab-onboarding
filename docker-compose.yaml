@@ -2,7 +2,6 @@ version: "3.9"
 
 services:
   web:
-    container_name: website
     build:
       context: ./web
       target: app
@@ -14,8 +13,11 @@ services:
     links:
       - api
     stop_signal: SIGINT
+    volumes:
+      # Pick up code changes while running
+      # Right-hand directory must match the target WORKDIR in Dockerfile
+      - ./web/src/web:/app
   api:
-    container_name: users-api
     restart: always
     build:
       context: ./api
@@ -27,16 +29,21 @@ services:
     ports:
       - "80:80"
     command: /start-reload.sh
+    volumes:
+      # Pick up code changes while running
+      # Right-hand directory must match the target WORKDIR in Dockerfile
+      - ./api/src/api:/app
     environment:
       VARIABLE_NAME: api
+      REDIS_OM_URL: redis://db:6379
   db:
-    container_name: users-db
     image: redis/redis-stack:6.2.2-v5
     restart: always
     ports:
       - "6379:6379" # Server
       - "8001:8001" # RedisInsight
-    command: redis-server --loglevel warning
+    environment:
+      REDIS_ARGS: --save 20 1
     volumes:
       - ./redis:/data
       - ./redisinsight:/redisinsight
