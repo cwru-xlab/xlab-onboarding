@@ -46,7 +46,6 @@ services:
       - "8001:8001" # RedisInsight
     environment:
       REDIS_ARGS: --save 20 1
-    env_file: .env
     volumes:
       - ./redis:/data
       - ./redisinsight:/redisinsight
