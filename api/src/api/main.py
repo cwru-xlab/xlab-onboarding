@@ -1,11 +1,47 @@
+from __future__ import annotations
+
+from typing import Optional
+
 import fastapi
+from pydantic import constr
+from redis_om.model import model
+
+from util import migrate
 
 api = fastapi.FastAPI()
+
+
+@migrate
+class User(model.HashModel):
+    username: constr(regex=r"[\w\-.]+", strict=True) = model.Field(index=True)
+
+    @classmethod
+    def create(cls, username: str, save: bool = True, **kwargs) -> User:
+        if not (user := cls.lookup(username)):
+            user = User(username=username, **kwargs)
+            if save:
+                user.save()
+        return user
+
+    @classmethod
+    def destroy(cls, username: str) -> None:
+        if user := cls.lookup(username):
+            User.delete(user.pk)
+
+    @classmethod
+    def lookup(cls, username: str) -> Optional[User]:
+        match = User.find(User.username == username).all()
+        return None if not match else match[0]
 
 
 @api.get("/")
 def read_root():
     return {"Hello": "World"}
+
+
+@api.get("/user/{username}")
+def test_redis(username: str):
+    return User.create(username)
 
 # ses = boto3.resource("sesv2")
 
