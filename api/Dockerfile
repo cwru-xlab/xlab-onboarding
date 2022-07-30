@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
 # Ref: https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker
 # Ref: https://gist.github.com/soof-golan/6ebb97a792ccd87816c0bda1e6e8b8c2#file-app-py
+# If any issues arise using Poetry try using one of the templates provided at:
+# https://www.mktr.ai/the-data-scientists-quick-guide-to-dockerfiles-with-examples/
 FROM python:3.9-slim AS python
 WORKDIR /tmp
 RUN apt-get update && apt-get install -y --no-install-recommends curl
