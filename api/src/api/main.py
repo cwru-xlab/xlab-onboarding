@@ -12,6 +12,9 @@ from pydantic import EmailStr, constr
 import settings
 import util
 
+USER_TAG = ["user"]
+EMAIL_TAG = ["email"]
+
 api = fastapi.FastAPI(default_response_class=responses.ORJSONResponse)
 ses = boto3.resource("sesv2")
 
@@ -27,14 +30,14 @@ class User(model.HashModel):
         return None if not match else match[0]
 
 
-@api.get("/users/{username}", status_code=status.HTTP_200_OK)
+@api.get("/users/{username}", status_code=status.HTTP_200_OK, tags=USER_TAG)
 async def get_user(username: str) -> Optional[User]:
     if not (user := await User.lookup(username)):
         raise_user_not_found(username)
     return user
 
 
-@api.post("/users/", status_code=status.HTTP_201_CREATED)
+@api.post("/users/", status_code=status.HTTP_201_CREATED, tags=USER_TAG)
 async def create_user(user: User) -> None:
     if not User.lookup(user.username):
         await User.save(user)
@@ -42,7 +45,8 @@ async def create_user(user: User) -> None:
         raise_user_exists(user.username)
 
 
-@api.delete("/users/{username}", status_code=status.HTTP_204_NO_CONTENT)
+@api.delete(
+    "/users/{username}", status_code=status.HTTP_204_NO_CONTENT, tags=USER_TAG)
 async def delete_user(username: str) -> None:
     if user := await User.lookup(username):
         await User.delete(user.pk)
@@ -62,7 +66,7 @@ def raise_user_exists(username: str) -> None:
         detail=f"User '{username}' already exists")
 
 
-@api.post("/emails/", status_code=status.HTTP_201_CREATED)
+@api.post("/emails/", status_code=status.HTTP_201_CREATED, tags=EMAIL_TAG)
 def create_email(username: str) -> str:
     address = f"{username}@{settings.config.domain}"
     try:
