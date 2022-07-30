@@ -71,16 +71,12 @@ def create_email(username: str) -> str:
         waiter.wait(
             Identities=[address],
             WaiterConfig={"Delay": 3, "MaxAttempts": 20})
+        return address
     except (errors.AlreadyExistsException,
             errors.LimitExceededException,
             errors.TooManyRequestsException,
             errors.BadRequestException,
             errors.ConcurrentModificationException,
             errors.NotFoundException) as e:
-        raise_aws_exception(e)
-    return address
-
-
-def raise_aws_exception(error) -> None:
-    raise fastapi.HTTPException(
-        status_code=error.http_status_code, detail=error.message)
+        raise fastapi.HTTPException(
+            status_code=e.http_status_code, detail=e.message)
