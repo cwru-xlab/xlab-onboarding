@@ -16,6 +16,7 @@ import util
 USER_TAG = ["user"]
 EMAIL_TAG = ["email"]
 
+config = settings.Settings()
 api = fastapi.FastAPI(default_response_class=responses.ORJSONResponse)
 ses = boto3.resource("sesv2")
 
@@ -65,7 +66,7 @@ def raise_user_not_found(username: str) -> None:
 
 @api.post("/emails/", status_code=status.HTTP_201_CREATED, tags=EMAIL_TAG)
 def create_email_address(username: str) -> str:
-    address = f"{username}@{settings.config.domain}"
+    address = f"{username}@{config.domain}"
     try:
         ses.create_email_identity(address)
     except (errors.AlreadyExistsException,
