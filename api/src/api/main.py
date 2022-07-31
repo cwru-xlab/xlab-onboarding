@@ -6,6 +6,7 @@ import boto3
 import fastapi
 from aredis_om import model
 from aws_error_utils import errors
+from botocore.exceptions import BotoCoreError, WaiterError
 from fastapi import responses, status
 from pydantic import EmailStr, constr
 
@@ -42,7 +43,9 @@ async def create_user(user: User) -> None:
     if not User.lookup(user.username):
         await User.save(user)
     else:
-        raise_user_exists(user.username)
+        raise fastapi.HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User '{user.username}' already exists")
 
 
 @api.delete(
@@ -60,22 +63,11 @@ def raise_user_not_found(username: str) -> None:
         detail=f"User '{username}' not found")
 
 
-def raise_user_exists(username: str) -> None:
-    raise fastapi.HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        detail=f"User '{username}' already exists")
-
-
 @api.post("/emails/", status_code=status.HTTP_201_CREATED, tags=EMAIL_TAG)
-def create_email(username: str) -> str:
+def create_email_address(username: str) -> str:
     address = f"{username}@{settings.config.domain}"
     try:
         ses.create_email_identity(address)
-        waiter = ses.get_waiter("identity_exists")
-        waiter.wait(
-            Identities=[address],
-            WaiterConfig={"Delay": 3, "MaxAttempts": 20})
-        return address
     except (errors.AlreadyExistsException,
             errors.LimitExceededException,
             errors.TooManyRequestsException,
@@ -84,3 +76,18 @@ def create_email(username: str) -> str:
             errors.NotFoundException) as e:
         raise fastapi.HTTPException(
             status_code=e.http_status_code, detail=e.message)
+    try:
+        waiter = ses.get_waiter("identity_exists")
+        waiter.wait(
+            Identities=[address],
+            WaiterConfig={"Delay": 3, "MaxAttempts": 20})
+    except WaiterError as e:
+        raise fastapi.HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=e.kwargs["reason"])
+    except BotoCoreError as e:
+        raise fastapi.HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e.kwargs))
+    else:
+        return address
