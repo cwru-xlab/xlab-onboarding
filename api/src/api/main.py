@@ -2,11 +2,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-import boto3
 import fastapi
 from aredis_om import model
-from aws_error_utils import errors
-from botocore.exceptions import BotoCoreError, WaiterError
 from fastapi import responses, status
 from pydantic import EmailStr, constr
 
@@ -18,7 +15,6 @@ EMAIL_TAG = ["email"]
 
 config = settings.Settings()
 api = fastapi.FastAPI(default_response_class=responses.ORJSONResponse)
-ses = boto3.resource("sesv2")
 
 
 @util.migrate
@@ -62,33 +58,3 @@ def raise_user_not_found(username: str) -> None:
     raise fastapi.HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"User '{username}' not found")
-
-
-@api.post("/emails/", status_code=status.HTTP_201_CREATED, tags=EMAIL_TAG)
-def create_email_address(username: str) -> str:
-    address = f"{username}@{config.domain}"
-    try:
-        ses.create_email_identity(address)
-    except (errors.AlreadyExistsException,
-            errors.LimitExceededException,
-            errors.TooManyRequestsException,
-            errors.BadRequestException,
-            errors.ConcurrentModificationException,
-            errors.NotFoundException) as e:
-        raise fastapi.HTTPException(
-            status_code=e.http_status_code, detail=e.message)
-    try:
-        waiter = ses.get_waiter("identity_exists")
-        waiter.wait(
-            Identities=[address],
-            WaiterConfig={"Delay": 3, "MaxAttempts": 20})
-    except WaiterError as e:
-        raise fastapi.HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=e.kwargs["reason"])
-    except BotoCoreError as e:
-        raise fastapi.HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e.kwargs))
-    else:
-        return address

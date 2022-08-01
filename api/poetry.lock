@@ -50,22 +50,6 @@ python-versions = ">=3.6"
 botocore = "*"
 
 [[package]]
-name = "boto3"
-version = "1.24.40"
-description = "The AWS SDK for Python"
-category = "main"
-optional = false
-python-versions = ">= 3.7"
-
-[package.dependencies]
-botocore = ">=1.27.40,<1.28.0"
-jmespath = ">=0.7.1,<2.0.0"
-s3transfer = ">=0.6.0,<0.7.0"
-
-[package.extras]
-crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
-
-[[package]]
 name = "botocore"
 version = "1.27.40"
 description = "Low-level, data-driven core of boto 3."
@@ -317,20 +301,6 @@ types-six = ">=1.16.1,<2.0.0"
 typing-extensions = ">=4.0.0,<5.0.0"
 
 [[package]]
-name = "s3transfer"
-version = "0.6.0"
-description = "An Amazon S3 Transfer Manager"
-category = "main"
-optional = false
-python-versions = ">= 3.7"
-
-[package.dependencies]
-botocore = ">=1.12.36,<2.0a.0"
-
-[package.extras]
-crt = ["botocore[crt] (>=1.20.29,<2.0a.0)"]
-
-[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -409,7 +379,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "94450ff0f0a3c3c6395b59f3e371b866869daaa97b80c2c06834688e972808c6"
+content-hash = "4ed2854bf80d52499c02fea49f39272a2c5e347627166fcbe13ac5cf5f124ece"
 
 [metadata.files]
 aioredis = [
@@ -427,10 +397,6 @@ async-timeout = [
 aws-error-utils = [
     { file = "aws-error-utils-2.5.0.tar.gz", hash = "sha256:23f8eb667873c46784f70fba444548e39a12f57ad218f58463666ede61ea2d0d" },
     { file = "aws_error_utils-2.5.0-py3-none-any.whl", hash = "sha256:781dcc6783567629eda25d053591be8618818083edf666ca1e3890651ac05c30" },
-]
-boto3 = [
-    { file = "boto3-1.24.40-py3-none-any.whl", hash = "sha256:904294a46816b2b134f5f3d83e07f0496155a4815e90e0d717949f1e8c2846d6" },
-    { file = "boto3-1.24.40.tar.gz", hash = "sha256:e05495e4da96d1811cc9cd960de2d044468f50cd192315747d61be9c1b879fdb" },
 ]
 botocore = [
     { file = "botocore-1.27.40-py3-none-any.whl", hash = "sha256:5482d44e4964dcaca673a7f115d889ac4b68e4f1b372ff0a294d4ee43a7b2a03" },
@@ -586,10 +552,6 @@ redis = [
 redis-om = [
     { file = "redis-om-0.0.27.tar.gz", hash = "sha256:03563be2570152436c833c6472b3a70f0baf53b46232c5811c5047e3a9f8c3be" },
     { file = "redis_om-0.0.27-py3-none-any.whl", hash = "sha256:dbc59b39868acb5a311e384bfa52babf143f55cf6a27e6877447e433a7c9ab37" },
-]
-s3transfer = [
-    { file = "s3transfer-0.6.0-py3-none-any.whl", hash = "sha256:06176b74f3a15f61f1b4f25a1fc29a4429040b7647133a463da8fa5bd28d5ecd" },
-    { file = "s3transfer-0.6.0.tar.gz", hash = "sha256:2ed07d3866f523cc561bf4a00fc5535827981b117dd7876f036b0c1aca42c947" },
 ]
 six = [
     { file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254" },
