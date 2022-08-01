@@ -133,3 +133,5 @@ dmypy.json
 # Redis Docker persistance
 redis
 redisinsight
+
+.idea
