@@ -7,13 +7,11 @@ from aredis_om import model
 from fastapi import responses, status
 from pydantic import constr
 
-import settings
 import util
 
 USER_TAG = ["user"]
 EMAIL_TAG = ["email"]
 
-config = settings.Settings()
 api = fastapi.FastAPI(default_response_class=responses.ORJSONResponse)
 
 

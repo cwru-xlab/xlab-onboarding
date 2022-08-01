@@ -17,7 +17,7 @@ services:
       # Pick up code changes while running
       # Right-hand directory must match the target WORKDIR in Dockerfile
       - ./web/src/web:/app
-    env_file: .env
+    env_file: web/.env
   api:
     restart: always
     build:
@@ -37,7 +37,6 @@ services:
     environment:
       VARIABLE_NAME: api
       REDIS_OM_URL: redis://db:6379
-    env_file: .env
   db:
     image: redis/redis-stack:6.2.2-v5
     restart: always
