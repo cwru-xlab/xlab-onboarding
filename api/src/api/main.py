@@ -5,7 +5,7 @@ from typing import Optional
 import fastapi
 from aredis_om import model
 from fastapi import responses, status
-from pydantic import EmailStr, constr
+from pydantic import constr
 
 import settings
 import util
@@ -20,7 +20,6 @@ api = fastapi.FastAPI(default_response_class=responses.ORJSONResponse)
 @util.migrate
 class User(model.HashModel):
     username: constr(regex=r"[\w\-.]+", strict=True) = model.Field(index=True)
-    recovery_email: EmailStr
 
     @classmethod
     async def lookup(cls, username: str) -> Optional[User]:
