@@ -16,6 +16,6 @@ FROM tiangolo/meinheld-gunicorn-flask:python3.9 AS app
 WORKDIR /app
 COPY --from=python /tmp/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
-COPY ./src/web /app
+COPY ./src/web /app/
 EXPOSE 8000
 CMD ["gunicorn", "--bind", "0.0.0.0:8000" ,"main:app"]
