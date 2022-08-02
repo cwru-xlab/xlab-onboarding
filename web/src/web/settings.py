@@ -5,13 +5,11 @@ from flask import Flask
 from keyring.credentials import Credential
 from pydantic import DirectoryPath, SecretStr, StrictStr
 
-ASSETS_ROOT_KEY = "ASSETS_ROOT"
-
 
 def init_app(app: Flask) -> None:
     config = Settings()
     flask.g.hat_client = config.hat_client
-    app.config[ASSETS_ROOT_KEY] = config.assets_root
+    app.config["ASSETS_ROOT"] = config.assets_root
 
 
 class Settings(pydantic.BaseSettings):
