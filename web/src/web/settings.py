@@ -3,22 +3,24 @@ import hat
 import pydantic
 from flask import Flask
 from keyring.credentials import Credential
-from pydantic import DirectoryPath, SecretStr, StrictStr
+from pydantic import DirectoryPath
 
 
 def init_app(app: Flask) -> None:
     config = Settings()
     flask.g.hat_client = config.hat_client
     app.config["ASSETS_ROOT"] = config.assets_root
-    app.config["SECRET_KEY"] = config.secret_key.get_secret_value()
+    app.config["SECRET_KEY"] = config.secret_key
+    app.config["SECURITY_PASSWORD_SALT"] = config.security_password_salt
 
 
 class Settings(pydantic.BaseSettings):
-    hat_username: StrictStr
-    hat_password: SecretStr
-    hat_namespace: StrictStr
+    hat_username: str
+    hat_password: str
+    hat_namespace: str
     assets_root: DirectoryPath
-    secret_key: SecretStr
+    secret_key: str
+    security_password_salt: str
 
     class Config:
         allow_mutation = False
@@ -41,6 +43,6 @@ class Settings(pydantic.BaseSettings):
 
             @property
             def password(self) -> str:
-                return self._settings.hat_password.get_secret_value()
+                return self._settings.hat_password
 
         return HatCredential(self)
