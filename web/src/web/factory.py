@@ -18,7 +18,7 @@ def make_app() -> flask.Flask:
             current_page = flask.request.path.split("/")[-1] or "index"
             return flask.render_template("home/" + path, segment=current_page)
         except jinja2.TemplateNotFound:
-            return flask.render_template("home/page-404.html"), 404
+            return flask.render_template("home/404.html"), 404
 
     return app
 
