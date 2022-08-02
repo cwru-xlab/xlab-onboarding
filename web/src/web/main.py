@@ -16,9 +16,7 @@ settings.init_app(app)
 @app.route("/<path:path>")
 def index(path: str):
     try:
-        # Detect the current page
-        segment = flask.request.path.split("/")[-1] or "index"
-        # Serve the file (if exists) from app/templates/home/FILE.html
-        return flask.render_template("home/" + path, segment=segment)
+        current_page = flask.request.path.split("/")[-1] or "index"
+        return flask.render_template("home/" + path, segment=current_page)
     except jinja2.TemplateNotFound:
         return flask.render_template("home/page-404.html"), 404
