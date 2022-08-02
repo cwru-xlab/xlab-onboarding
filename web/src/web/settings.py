@@ -10,6 +10,7 @@ def init_app(app: Flask) -> None:
     config = Settings()
     flask.g.hat_client = config.hat_client
     app.config["ASSETS_ROOT"] = config.assets_root
+    app.config["SECRET_KEY"] = config.secret_key.get_secret_value()
 
 
 class Settings(pydantic.BaseSettings):
@@ -17,6 +18,7 @@ class Settings(pydantic.BaseSettings):
     hat_password: SecretStr
     hat_namespace: StrictStr
     assets_root: DirectoryPath
+    secret_key: SecretStr
 
     class Config:
         allow_mutation = False
