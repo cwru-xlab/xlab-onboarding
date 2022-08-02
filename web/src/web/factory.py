@@ -1,3 +1,5 @@
+import os
+
 import flask
 import jinja2
 from hat import HatClient
@@ -31,7 +33,6 @@ def _teardown_appcontext(exception: BaseException) -> None:
 
 
 def _ensure_instance_folder_exists() -> None:
-    import os
     try:
         os.makedirs(flask.current_app.instance_path)
     except OSError:
