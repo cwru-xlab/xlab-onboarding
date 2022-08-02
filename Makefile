@@ -1,5 +1,5 @@
 up:
-	@docker-compose up -d --build
+	@docker-compose up --detach --build
 	@docker image prune --force
 
 stop:
@@ -7,3 +7,6 @@ stop:
 
 down:
 	@docker-compose down
+
+clean:
+	@docker system prune --all --force
