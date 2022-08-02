@@ -1,3 +1,4 @@
+import flask
 import hat
 import pydantic
 from flask import Flask
@@ -10,7 +11,7 @@ ASSETS_ROOT_KEY = "ASSETS_ROOT"
 
 def init_app(app: Flask) -> None:
     config = Settings()
-    app.config[HAT_CLIENT_KEY] = config.hat_client
+    flask.g.hat_client = config.hat_client
     app.config[ASSETS_ROOT_KEY] = config.assets_root
 
 
