@@ -131,7 +131,7 @@ async = ["asgiref (>=3.2)"]
 
 [[package]]
 name = "hat-py-sdk"
-version = "0.6.0"
+version = "0.7.0"
 description = ""
 category = "main"
 optional = false
@@ -149,8 +149,8 @@ requests = "^2.28.1"
 [package.source]
 type = "git"
 url = "https://github.com/cwru-xlab/hat-py-sdk"
-reference = "v0.6.0"
-resolved_reference = "5192bc343d6d30518600f0cfe664cb1cde23bf84"
+reference = "v0.7.0"
+resolved_reference = "ab793cef7f7ed0ab7d4030cefd0ad9a78ba8c6d3"
 
 [[package]]
 name = "humps"
@@ -393,7 +393,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "4b4f25249e91b03de3ceedefe1dbdf615ee8bfe8b2d1ce89cf3723301e7c20fc"
+content-hash = "32b5a55ba3e8ab643d6400cafd65027ec164627236cf633a2517a7541f5cb2b7"
 
 [metadata.files]
 cachecontrol = [
