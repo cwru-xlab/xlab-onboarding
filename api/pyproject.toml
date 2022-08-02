@@ -10,7 +10,6 @@ python = "^3.9"
 fastapi = "^0.79.0"
 redis-om = "^0.0.27"
 pydantic = { extras = ["email"], version = "^1.9.1" }
-aws-error-utils = "^2.5.0"
 bcrypt = "^3.2.2"
 
 [tool.poetry.dev-dependencies]
