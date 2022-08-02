@@ -355,7 +355,6 @@ optional = false
 python-versions = ">=3.6.1"
 
 [package.dependencies]
-email-validator = { version = ">=1.0.3", optional = true, markers = "extra == \"email\"" }
 python-dotenv = { version = ">=0.10.4", optional = true, markers = "extra == \"dotenv\"" }
 typing-extensions = ">=3.7.4.3"
 
@@ -493,7 +492,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "0e519759c4945a9d91b3f50bb46f0187a0c89e2ac8ecbfb68b557cb9d0bc4ee4"
+content-hash = "32302ce89447e2c03d94aba3ca27e6d124e3889740316c6746aeef8972ee4351"
 
 [metadata.files]
 blinker = [
