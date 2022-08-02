@@ -27,7 +27,7 @@ def make_app() -> flask.Flask:
 
 
 def _teardown_appcontext(exception: BaseException) -> None:
-    hat_client: HatClient = flask.g.pop(settings.HAT_CLIENT_KEY, None)
+    hat_client: HatClient = flask.g.pop("hat_client", None)
     if hat_client is not None:
         hat_client.close()
 

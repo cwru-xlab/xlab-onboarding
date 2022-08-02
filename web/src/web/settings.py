@@ -5,7 +5,6 @@ from flask import Flask
 from keyring.credentials import Credential
 from pydantic import DirectoryPath, SecretStr, StrictStr
 
-HAT_CLIENT_KEY = "HAT_CLIENT"
 ASSETS_ROOT_KEY = "ASSETS_ROOT"
 
 
