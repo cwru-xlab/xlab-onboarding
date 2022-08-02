@@ -6,15 +6,15 @@
 # https://www.mktr.ai/the-data-scientists-quick-guide-to-dockerfiles-with-examples/
 FROM nikolaik/python-nodejs:python3.9-nodejs16-slim as base
 WORKDIR /tmp
+# Export Javascript dependencies
+COPY ./src/web/static/assets/package*.json ./
+RUN npm install
 # Export Python dependencies from Poetry
 RUN apt-get update && apt-get install -y --no-install-recommends curl
 RUN curl -sSL https://install.python-poetry.org | python3 - --version 1.1.14
 ENV PATH="/root/.local/bin:$PATH"
 COPY ./pyproject.toml ./poetry.lock* ./
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
-# Export Javascript dependencies
-COPY ./src/web/static/assets/package*.json ./
-RUN npm install
 
 FROM tiangolo/meinheld-gunicorn-flask:python3.9 AS app
 WORKDIR /app
