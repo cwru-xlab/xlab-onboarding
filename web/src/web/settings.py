@@ -3,7 +3,7 @@ import hat
 import pydantic
 from flask import Flask
 from keyring.credentials import Credential
-from pydantic import DirectoryPath
+from pydantic import DirectoryPath, StrictStr
 
 
 def init_app(app: Flask) -> None:
@@ -12,15 +12,17 @@ def init_app(app: Flask) -> None:
     app.config["ASSETS_ROOT"] = config.assets_root
     app.config["SECRET_KEY"] = config.secret_key
     app.config["SECURITY_PASSWORD_SALT"] = config.security_password_salt
+    app.config["EMAIL_DOMAIN"] = config.email_domain
 
 
 class Settings(pydantic.BaseSettings):
-    hat_username: str
-    hat_password: str
-    hat_namespace: str
+    hat_username: StrictStr
+    hat_password: StrictStr
+    hat_namespace: StrictStr
     assets_root: DirectoryPath
-    secret_key: str
-    security_password_salt: str
+    secret_key: StrictStr
+    security_password_salt: StrictStr
+    email_domain: StrictStr
 
     class Config:
         allow_mutation = False

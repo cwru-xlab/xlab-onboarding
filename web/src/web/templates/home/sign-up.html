@@ -46,7 +46,9 @@
                                     <input type="text" class="form-control"
                                            placeholder="Username"
                                            id="username" autofocus required>
-                                    <div class="form-control">@xmail.com</div>
+                                    <div class="form-control">
+                                        @{{ config.EMAIL_DOMAIN }}
+                                    </div>
                                 </div>
                             </div>
                             <!-- End of Form -->
