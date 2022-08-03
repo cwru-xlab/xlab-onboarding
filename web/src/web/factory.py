@@ -5,14 +5,15 @@ import flask
 import jinja2
 from hat import HatClient
 
+import auth
 import settings
 
 
 def make_app() -> flask.Flask:
     app = flask.Flask(__name__)
     app.teardown_appcontext(teardown_appcontext)
-    with app.app_context():
-        settings.init_app(app)
+    settings.init_app(app)
+    auth.init_app(app)
 
     @app.route("/", defaults={"path": "index.html"})
     @app.route("/<path:path>")
