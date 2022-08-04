@@ -5,27 +5,43 @@ import hat
 import pydantic
 from flask import Flask
 from keyring.credentials import Credential
-from pydantic import DirectoryPath, StrictStr
+from pydantic import DirectoryPath
 
 
 def init_app(app: Flask) -> None:
-    config = Settings()
-    app.config.from_object(config)
-    flask.g.hat_client = config.hat_client()
+    with app.app_context():
+        config = Settings()
+        app.config.from_object(config)
+        flask.g.hat_client = config.hat_client()
 
 
 class Settings(pydantic.BaseSettings):
     # Lowercase attributes: internal usage
-    hat_username: StrictStr
-    hat_password: StrictStr
-    hat_namespace: StrictStr
+    hat_username: str
+    hat_password: str
+    hat_namespace: str
     # Uppercase attributes: export directly
     FLASK_DEBUG: bool
     ASSETS_ROOT: DirectoryPath
-    SECRET_KEY: StrictStr
-    SECURITY_PASSWORD_SALT: StrictStr
-    EMAIL_DOMAIN: StrictStr
+    EMAIL_DOMAIN: str
+
+    SECRET_KEY: str
+    SECURITY_PASSWORD_SALT: str
+    SECURITY_PASSWORD_HASH: str
+    SECURITY_PASSWORD_COMPLEXITY_CHECKER: str
+    SECURITY_PASSWORD_CHECK_BREACHED: str
     SECURITY_EMAIL_VALIDATOR_ARGS: dict[str, Any]
+    SECURITY_LOGIN_URL: str
+    SECURITY_LOGOUT_URL: str
+    SECURITY_POST_LOGIN_VIEW: str
+    SECURITY_POST_LOGOUT_VIEW: str
+    SECURITY_UNAUTHORIZED_VIEW: str
+    SECURITY_LOGIN_USER_TEMPLATE: str
+    SECURITY_SEND_REGISTER_EMAIL: bool
+    SECURITY_REGISTER_USER_TEMPLATE: str
+    SECURITY_REGISTER_URL: str
+    SECURITY_USERNAME_ENABLE: bool
+    SECURITY_USERNAME_REQUIRED: bool
 
     class Config(pydantic.BaseSettings.Config):
         case_sensitive = False
