@@ -1,3 +1,5 @@
+from typing import Any
+
 import flask
 import hat
 import pydantic
@@ -8,26 +10,27 @@ from pydantic import DirectoryPath, StrictStr
 
 def init_app(app: Flask) -> None:
     config = Settings()
-    flask.g.hat_client = config.hat_client
-    app.config["ASSETS_ROOT"] = config.assets_root
-    app.config["SECRET_KEY"] = config.secret_key
-    app.config["SECURITY_PASSWORD_SALT"] = config.security_password_salt
-    app.config["EMAIL_DOMAIN"] = config.email_domain
+    app.config.from_object(config)
+    flask.g.hat_client = config.hat_client()
 
 
 class Settings(pydantic.BaseSettings):
+    # Lowercase attributes: internal usage
     hat_username: StrictStr
     hat_password: StrictStr
     hat_namespace: StrictStr
-    assets_root: DirectoryPath
-    secret_key: StrictStr
-    security_password_salt: StrictStr
-    email_domain: StrictStr
+    # Uppercase attributes: export directly
+    FLASK_DEBUG: bool
+    ASSETS_ROOT: DirectoryPath
+    SECRET_KEY: StrictStr
+    SECURITY_PASSWORD_SALT: StrictStr
+    EMAIL_DOMAIN: StrictStr
+    SECURITY_EMAIL_VALIDATOR_ARGS: dict[str, Any]
 
-    class Config:
+    class Config(pydantic.BaseSettings.Config):
+        case_sensitive = False
         allow_mutation = False
 
-    @property
     def hat_client(self) -> hat.HatClient:
         token = hat.ApiOwnerToken(self.hat_credential())
         return hat.HatClient(token)
