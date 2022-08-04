@@ -15,6 +15,7 @@ Flask-Security-Too = "^4.1.5"
 python-dotenv = "^0.20.0"
 email-validator = "^1.2.1"
 redis-om = "^0.0.27"
+zxcvbn = "^4.4.28"
 
 [tool.poetry.dev-dependencies]
 
