@@ -2,6 +2,7 @@ import functools
 from typing import Callable
 
 import flask
+import flask_security
 import jinja2
 from hat import HatClient
 
@@ -21,6 +22,12 @@ def make_app() -> flask.Flask:
     def index(path: str):
         current_page = flask.request.path.split("/")[-1] or "index"
         return flask.render_template("home/" + path, segment=current_page)
+
+    @app.route("/inbox")
+    @flask_security.auth_required()
+    @with_fallback
+    def inbox():
+        pass
 
     return app
 
