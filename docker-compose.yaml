@@ -12,6 +12,7 @@ services:
       - db
     links:
       - api
+      - db
     stop_signal: SIGINT
     volumes:
       # Pick up code changes while running
