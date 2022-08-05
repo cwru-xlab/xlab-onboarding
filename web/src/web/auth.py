@@ -74,7 +74,8 @@ class RedisUserDatastore(RedisDatastore, flask_security.UserDatastore):
     def find_user(self, **kwargs) -> Optional[RedisUser]:
         result = None
         if valid := self.VALID_USER_QUERY_ATTRIBUTES.intersection(kwargs):
-            query = (eval(f"RedisUser.{v}") == kwargs[v] for v in valid)
+            query = (
+                eval(f"{RedisUser.__name__}.{v}") == kwargs[v] for v in valid)
             result = RedisUser.find(*query).all()
             result = self._first_or_none(result)
         return result
