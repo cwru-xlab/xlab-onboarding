@@ -3,9 +3,9 @@ from __future__ import annotations
 import functools
 from typing import Any, Optional, Type, TypeVar, Union, cast
 
+import flask
 import flask_security
 import redis_om
-from flask import Flask
 from flask_security import datastore
 from pydantic import EmailStr, StrictBool, StrictStr, conlist
 from redis_om import Field
@@ -88,5 +88,6 @@ class RedisUserDatastore(RedisDatastore, flask_security.UserDatastore):
         return result[0] if result else None
 
 
-def init_app(app: Flask) -> None:
-    flask_security.Security(app, RedisUserDatastore())
+def init_app() -> None:
+    flask.g.users = RedisUserDatastore()
+    flask_security.Security(flask.current_app, flask.g.users)
