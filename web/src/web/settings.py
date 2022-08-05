@@ -3,16 +3,17 @@ from typing import Any
 import flask
 import hat
 import pydantic
-from flask import Flask
 from keyring.credentials import Credential
 from pydantic import DirectoryPath
 
 
-def init_app(app: Flask) -> None:
-    with app.app_context():
-        config = Settings()
-        app.config.from_object(config)
-        flask.g.hat_client = config.hat_client()
+def init_app() -> None:
+    app = flask.current_app
+    config = AttrConfig(app.config.root_path)
+    config.update(app.config)
+    config.from_object(s := Settings())
+    app.config = config
+    hat.ActiveHatModel.client = flask.g.hat_client = s.hat_client()
 
 
 class Settings(pydantic.BaseSettings):
@@ -67,3 +68,16 @@ class Settings(pydantic.BaseSettings):
                 return self._settings.hat_password
 
         return HatCredential(self)
+
+
+class AttrConfig(flask.Config):
+    # Source: https://github.com/pallets/flask/issues/1992#issue-172434213
+
+    def __init__(self, root_path: str, **kwargs) -> None:
+        super().__init__(root_path, **kwargs)
+
+    def __getattr__(self, attr: str) -> Any:
+        try:
+            return self[attr]
+        except KeyError:
+            raise AttributeError(f"Invalid config option: {attr}")
