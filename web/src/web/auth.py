@@ -7,7 +7,7 @@ import flask
 import flask_security
 import redis_om
 from flask_security import datastore
-from pydantic import EmailStr, StrictBool, StrictStr, conlist
+from pydantic import StrictBool, StrictStr, conlist
 from redis_om import Field
 
 T = TypeVar("T", bound=redis_om.RedisModel)
@@ -33,7 +33,6 @@ class RedisRole(redis_om.JsonModel, flask_security.RoleMixin):
 @migrate
 class RedisUser(redis_om.JsonModel, flask_security.UserMixin):
     fs_uniquifier: StrictStr = Field(index=True)
-    email: EmailStr = Field(index=True)
     username: StrictStr = Field(index=True)
     password: StrictStr
     active: StrictBool = True
@@ -59,7 +58,7 @@ class RedisDatastore(datastore.Datastore):
         Model.delete(model.pk)
 
 
-class RedisUserDatastore(RedisDatastore, flask_security.UserDatastore):
+class RedisUserDatastore(flask_security.UserDatastore, RedisDatastore):
     __slots__ = ()
 
     VALID_USER_QUERY_ATTRIBUTES = {"email", "username", "fs_uniquifier"}
