@@ -22,18 +22,18 @@ def make_app() -> flask.Flask:
         settings.init_app()
         auth.init_app()
 
-    @app.route("/", defaults={"path": "index.html"})
-    @app.route("/<path:path>")
-    @with_fallback
-    def index(path: str):
-        return flask.render_template(
-            format_path(path), segment=path.split("/")[-1] or "index")
+    @app.route("/home")
+    def home():
+        return "Welcome to xMail!"
 
     @app.route("/inbox")
     @flask_security.auth_required()
-    @with_fallback
     def inbox():
-        pass
+        return "Welcome to your inbox!"
+
+    @app.context_processor
+    def login_context():
+        return {"url_for_security": flask_security.url_for_security}
 
     def get_emails(username: str) -> list[Email]:
         return Email.get(username)
