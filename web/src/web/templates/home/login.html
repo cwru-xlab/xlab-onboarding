@@ -5,12 +5,15 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
+{% from "includes/scripts.html" import with_errors %}
+
 {% block content %}
 
 <main>
     <section class="vh-lg-100 mt-5 mt-lg-0 bg-soft d-flex align-items-center">
         <div class="container">
             <p class="text-center">
+                <!--suppress HtmlUnknownTarget -->
                 <a href="{{ url_for('home') }}"
                    class="d-flex align-items-center justify-content-center">
                     <svg class="icon icon-xs me-2" fill="currentColor"
@@ -29,12 +32,12 @@
                         <div class="text-center text-md-center mb-4 mt-md-0">
                             <h1 class="mb-0 h3">Sign in to your xMail</h1>
                         </div>
+                        <!--suppress HtmlUnknownTarget -->
                         <form action="{{ url_for_security('login') }}"
                               method="POST" class="mt-4">
-                            <!-- Form -->
                             {{login_user_form.hidden_tag() }}
                             <div class="form-group mb-4">
-                                <label>Email</label>
+                                <label>Username</label>
                                 <div class="input-group">
                                         <span class="input-group-text"
                                               id="basic-addon1">
@@ -45,15 +48,10 @@
                                                     d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path
                                                     d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
                                         </span>
-                                    {{login_user_form.email(placeholder="Username",class="form-control")}}
-                                    <div class="form-control">
-                                        @{{ config.EMAIL_DOMAIN }}
-                                    </div>
+                                    {{with_errors(login_user_form.email,placeholder="Username",class="form-control")}}
                                 </div>
                             </div>
-                            <!-- End of Form -->
                             <div class="form-group">
-                                <!-- Form -->
                                 <div class="form-group mb-4">
                                     <label>Password</label>
                                     <div class="input-group">
@@ -67,10 +65,9 @@
                                                         d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                                                         clip-rule="evenodd"></path></svg>
                                             </span>
-                                        {{login_user_form.password(placeholder="Password",class="form-control")}}
+                                        {{with_errors(login_user_form.password,placeholder="Password",class="form-control")}}
                                     </div>
                                 </div>
-                                <!-- End of Form -->
                             </div>
                             <div class="d-grid">
                                 {{login_user_form.submit(class="btn
@@ -80,6 +77,7 @@
                         <div class="d-flex justify-content-center align-items-center mt-4">
                                 <span class="fw-normal">
                                     Not registered?
+                                    <!--suppress HtmlUnknownTarget -->
                                     <a href="{{ url_for_security('register') }}"
                                        class="fw-bold">Create account</a>
                                 </span>

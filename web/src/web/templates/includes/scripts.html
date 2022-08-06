@@ -39,3 +39,20 @@
 
 <!-- Volt JS -->
 <script src="{{ config.ASSETS_ROOT }}/js/volt.js"></script>
+
+<!--
+Ref: https://wtforms.readthedocs.io/en/3.0.x/specific_problems/#rendering-errors
+-->
+{% macro with_errors(field) %}
+{% if field.errors %}
+{% set class = kwargs.pop("class", "") + " is-invalid" %}
+{{ field(class=class, **kwargs) }}
+<div class="invalid-feedback">
+    {% for error in field.errors %}
+    <div>{{ error|e }}</div>
+    {% endfor %}
+</div>
+{% else %}
+{{ field(**kwargs) }}
+{% endif %}
+{% endmacro %}

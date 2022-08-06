@@ -1,7 +1,7 @@
-from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import flask
+import flask_security
 import hat
 import pydantic
 from keyring.credentials import Credential
@@ -17,36 +17,48 @@ def init_app() -> None:
     hat.ActiveHatModel.client = flask.g.hat_client = s.hat_client()
 
 
+# noinspection PyPep8Naming
 class Settings(pydantic.BaseSettings):
     # Lowercase attributes: internal usage
     hat_username: str
     hat_password: str
     hat_namespace: str
     # Uppercase attributes: export directly
-    FLASK_DEBUG: bool
-    PAGES_DIR: Path
-    ASSETS_ROOT: DirectoryPath
-    EMAIL_DOMAIN: str
-
+    FLASK_DEBUG: bool = True
+    ASSETS_ROOT: DirectoryPath = "./static/assets"  # Relative to the app root
+    EMAIL_DOMAIN: str = "xmail.com"
+    PAGES_DIR: str = "home"  # Relative to "templates" dir. Do NOT include "./"
     SECRET_KEY: str
     SECURITY_LOGIN_SALT: str
     SECURITY_PASSWORD_SALT: str
-    SECURITY_PASSWORD_HASH: str
-    SECURITY_PASSWORD_COMPLEXITY_CHECKER: str
-    SECURITY_PASSWORD_CHECK_BREACHED: str
-    SECURITY_EMAIL_VALIDATOR_ARGS: dict[str, Any]
-    SECURITY_POST_LOGIN_VIEW: str
-    SECURITY_UNAUTHORIZED_VIEW: str
-    SECURITY_LOGIN_USER_TEMPLATE: str
-    SECURITY_REGISTER_USER_TEMPLATE: str
-    SECURITY_REGISTERABLE: bool
-    SECURITY_SEND_REGISTER_EMAIL: bool
-    SECURITY_USERNAME_ENABLE: bool
-    SECURITY_USERNAME_REQUIRED: bool
+    SECURITY_PASSWORD_HASH: str = "bcrypt"
+    SECURITY_PASSWORD_COMPLEXITY_CHECKER: Optional[str] = "zxcvbn"
+    SECURITY_PASSWORD_CHECK_BREACHED: Optional[str] = "best-effort"
+    SECURITY_POST_LOGIN_VIEW: str = "/inbox"
+    SECURITY_REGISTERABLE: bool = True
+    SECURITY_SEND_REGISTER_EMAIL: bool = False
+    SECURITY_LOGIN_WITHOUT_CONFIRMATION: bool = True
+    SECURITY_USERNAME_ENABLE: bool = True
+    SECURITY_USERNAME_REQUIRED: bool = True
+    SECURITY_USER_IDENTITY_ATTRIBUTES = [
+        {"username": {
+            "mapper": flask_security.uia_username_mapper,
+            "case_insensitive": False}}]
+    SECURITY_REDIRECT_VALIDATE_MODE: str = "regex"
+    SECURITY_MSG_USERNAME_INVALID_LENGTH: list[str] = [
+        "Username must be %(min)d – %(max)d characters", "error"]
 
     class Config(pydantic.BaseSettings.Config):
         case_sensitive = False
         allow_mutation = False
+
+    @property
+    def SECURITY_LOGIN_USER_TEMPLATE(self) -> str:
+        return f"{self.PAGES_DIR}/login.html"
+
+    @property
+    def SECURITY_REGISTER_USER_TEMPLATE(self) -> str:
+        return f"{self.PAGES_DIR}/register.html"
 
     def hat_client(self) -> hat.HatClient:
         token = hat.ApiOwnerToken(self.hat_credential())

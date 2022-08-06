@@ -1,10 +1,10 @@
-import functools
+from __future__ import annotations
+
 import os.path
-from typing import Callable
 
 import flask
 import flask_security
-import jinja2
+from flask.typing import ErrorHandlerCallable
 from hat import HatClient
 from pydantic import NameEmail
 
@@ -19,21 +19,20 @@ def make_app() -> flask.Flask:
     app = flask.Flask(__name__)
     app.teardown_appcontext(teardown_appcontext)
     with app.app_context():
-        settings.init_app()
-        auth.init_app()
+        settings.init_app()  # Run early on to load configuration.
+        security = auth.init_app()
+        for code in (403, 404, 500):
+            app.register_error_handler(code, error_handler(code))
 
-    @app.route("/home")
+    @app.route("/")
     def home():
-        return "Welcome to xMail!"
+        # noinspection PyUnresolvedReferences
+        return app.redirect(security.login_url)
 
     @app.route("/inbox")
     @flask_security.auth_required()
     def inbox():
         return "Welcome to your inbox!"
-
-    @app.context_processor
-    def login_context():
-        return {"url_for_security": flask_security.url_for_security}
 
     def get_emails(username: str) -> list[Email]:
         return Email.get(username)
@@ -42,40 +41,33 @@ def make_app() -> flask.Flask:
         email.delete()
 
     def send_email(email: Email) -> None:
-        username = check_to(email.headers.to)
-        email.save(username)
+        email.save(check_to(email.headers.to))
 
     def check_to(to: NameEmail) -> str:
         username, domain = to.email.split("@")
         # Check that email domain is correct.
         config: AttrConfig = flask.current_app.config
-        if domain != (expected := config.EMAIL_DOMAIN):
-            raise ValueError(f"Email address domains must be {expected}")
+        if domain != config.EMAIL_DOMAIN:
+            raise ValueError(f"Email domain must be {config.EMAIL_DOMAIN}")
         # Check that the email address exists.
         users: RedisUserDatastore = flask.g.get("users")
         if not users.find_user(username=username):
-            raise ValueError(f"Email address {to.email} does not exist")
+            raise ValueError(f"{to.email} does not exist")
         return username
 
     return app
 
 
-def with_fallback(render) -> Callable[[...], str]:
-    @functools.wraps(render)
-    def wrapped(*args, **kwargs):
-        try:
-            return render(*args, **kwargs)
-        except jinja2.TemplateNotFound:
-            return flask.render_template(format_path("404.html")), 404
+def teardown_appcontext(exception: BaseException | None) -> None:
+    hat_client: HatClient = flask.g.pop("hat_client", None)
+    if hat_client is not None:
+        hat_client.close()
 
-    return wrapped
+
+def error_handler(code: int) -> ErrorHandlerCallable:
+    template = format_path(f"{code}.html")
+    return lambda e: (flask.render_template(template), code)
 
 
 def format_path(path: str) -> str:
     return os.path.join(flask.current_app.config.PAGES_DIR, path)
-
-
-def teardown_appcontext(exception: BaseException) -> None:
-    hat_client: HatClient = flask.g.pop("hat_client", None)
-    if hat_client is not None:
-        hat_client.close()
