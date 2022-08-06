@@ -1,4 +1,5 @@
 import functools
+import os.path
 from typing import Callable
 
 import flask
@@ -25,8 +26,8 @@ def make_app() -> flask.Flask:
     @app.route("/<path:path>")
     @with_fallback
     def index(path: str):
-        current_page = flask.request.path.split("/")[-1] or "index"
-        return flask.render_template("home/" + path, segment=current_page)
+        return flask.render_template(
+            format_path(path), segment=path.split("/")[-1] or "index")
 
     @app.route("/inbox")
     @flask_security.auth_required()
@@ -65,9 +66,13 @@ def with_fallback(render) -> Callable[[...], str]:
         try:
             return render(*args, **kwargs)
         except jinja2.TemplateNotFound:
-            return flask.render_template("home/404.html"), 404
+            return flask.render_template(format_path("404.html")), 404
 
     return wrapped
+
+
+def format_path(path: str) -> str:
+    return os.path.join(flask.current_app.config.PAGES_DIR, path)
 
 
 def teardown_appcontext(exception: BaseException) -> None:

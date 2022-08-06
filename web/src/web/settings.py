@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any
 
 import flask
@@ -23,6 +24,7 @@ class Settings(pydantic.BaseSettings):
     hat_namespace: str
     # Uppercase attributes: export directly
     FLASK_DEBUG: bool
+    PAGES_DIR: Path
     ASSETS_ROOT: DirectoryPath
     EMAIL_DOMAIN: str
 
@@ -32,7 +34,6 @@ class Settings(pydantic.BaseSettings):
     SECURITY_PASSWORD_COMPLEXITY_CHECKER: str
     SECURITY_PASSWORD_CHECK_BREACHED: str
     SECURITY_EMAIL_VALIDATOR_ARGS: dict[str, Any]
-    SECURITY_LOGIN_URL: str
     SECURITY_LOGOUT_URL: str
     SECURITY_POST_LOGIN_VIEW: str
     SECURITY_POST_LOGOUT_VIEW: str
@@ -40,7 +41,6 @@ class Settings(pydantic.BaseSettings):
     SECURITY_LOGIN_USER_TEMPLATE: str
     SECURITY_SEND_REGISTER_EMAIL: bool
     SECURITY_REGISTER_USER_TEMPLATE: str
-    SECURITY_REGISTER_URL: str
     SECURITY_USERNAME_ENABLE: bool
     SECURITY_USERNAME_REQUIRED: bool
 
