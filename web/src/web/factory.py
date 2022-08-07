@@ -32,7 +32,7 @@ def make_app() -> flask.Flask:
     @app.route("/inbox")
     @flask_security.auth_required()
     def inbox():
-        return "Welcome to your inbox!"
+        return flask.render_template(format_path("tables.html"))
 
     def get_emails(username: str) -> list[Email]:
         return Email.get(username)
