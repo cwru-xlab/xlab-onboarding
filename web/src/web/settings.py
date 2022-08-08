@@ -1,7 +1,7 @@
 from typing import Any, Callable, Optional
 
 import flask
-import flask_security
+import flask_security as fs
 import hat
 import pydantic
 from keyring.credentials import Credential
@@ -58,7 +58,7 @@ class Settings(pydantic.BaseSettings):
     SECURITY_USER_IDENTITY_ATTRIBUTES: list[UserIdentityAttribute] = [
         user_id_attribute(
             attribute="username",
-            mapper=flask_security.uia_username_mapper,
+            mapper=fs.uia_username_mapper,
             case_insensitive=False)]
     SECURITY_REDIRECT_VALIDATE_MODE: str = "regex"
     SECURITY_MSG_USERNAME_INVALID_LENGTH: tuple[str, str] = (

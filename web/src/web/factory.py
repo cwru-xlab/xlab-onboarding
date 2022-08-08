@@ -3,7 +3,7 @@ from __future__ import annotations
 import os.path
 
 import flask
-import flask_security
+import flask_security as fs
 from flask.typing import ErrorHandlerCallable
 from hat import HatClient
 from pydantic import NameEmail
@@ -35,7 +35,7 @@ def make_app() -> flask.Flask:
         return app.redirect(security.login_url)
 
     @app.route("/inbox")
-    @flask_security.auth_required()
+    @fs.auth_required()
     def inbox() -> str:
         return flask.render_template(format_path("tables.html"))
 

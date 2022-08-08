@@ -5,7 +5,7 @@ import warnings
 from typing import Any, Optional, Type, TypeVar, Union, cast
 
 import flask
-import flask_security
+import flask_security as fs
 import redis_om
 from flask_security import datastore, forms
 from pydantic import StrictBool, StrictStr, conlist
@@ -26,13 +26,13 @@ def migrate(model: T) -> T:
 
 
 @migrate
-class RedisRole(redis_om.JsonModel, flask_security.RoleMixin):
+class RedisRole(redis_om.JsonModel, fs.RoleMixin):
     name: StrictStr = Field(index=True)
     permissions: Permissions = set()
 
 
 @migrate
-class RedisUser(redis_om.JsonModel, flask_security.UserMixin):
+class RedisUser(redis_om.JsonModel, fs.UserMixin):
     fs_uniquifier: StrictStr = Field(index=True)
     username: StrictStr = Field(index=True)
     password: StrictStr
@@ -59,7 +59,7 @@ class RedisDatastore(datastore.Datastore):
         Model.delete(model.pk)
 
 
-class RedisUserDatastore(flask_security.UserDatastore, RedisDatastore):
+class RedisUserDatastore(fs.UserDatastore, RedisDatastore):
     __slots__ = ()
 
     _supported = {"username", "fs_uniquifier"}
@@ -96,13 +96,13 @@ class RedisUserDatastore(flask_security.UserDatastore, RedisDatastore):
         return result[0] if result else None
 
 
-class UsernameRegisterForm(flask_security.RegisterForm):
+class UsernameRegisterForm(fs.RegisterForm):
     """Hack to utilize RegisterForm, but use username instead of email."""
 
     email = forms.EmailField()  # Default: no validation
 
 
-def init_app() -> flask_security.Security:
+def init_app() -> fs.Security:
     flask.g.users = RedisUserDatastore()
-    return flask_security.Security(
+    return fs.Security(
         flask.current_app, flask.g.users, register_form=UsernameRegisterForm)
