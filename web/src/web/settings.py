@@ -17,16 +17,12 @@ def init_app() -> None:
     hat.ActiveHatModel.client = flask.g.hat_client = s.hat_client()
 
 
-UserIdentityAttribute = dict[str, dict[str, Any]]
+IdAttr = dict[str, dict[str, Any]]
 Mapper = Callable[[str], Optional[str]]
 
 
-def user_id_attribute(
-        attribute: str, mapper: Mapper, case_insensitive: bool
-) -> UserIdentityAttribute:
-    return {attribute: {
-        "mapper": mapper,
-        "case_insensitive": case_insensitive}}
+def id_attr(attr: str, *, mapper: Mapper, case_insensitive: bool) -> IdAttr:
+    return {attr: {"mapper": mapper, "case_insensitive": case_insensitive}}
 
 
 # noinspection PyPep8Naming
@@ -55,12 +51,13 @@ class Settings(pydantic.BaseSettings):
     SECURITY_LOGIN_WITHOUT_CONFIRMATION: bool = True
     SECURITY_USERNAME_ENABLE: bool = True
     SECURITY_USERNAME_REQUIRED: bool = True
-    SECURITY_USER_IDENTITY_ATTRIBUTES: list[UserIdentityAttribute] = [
-        user_id_attribute(
-            attribute="username",
-            mapper=fs.uia_username_mapper,
-            case_insensitive=False)]
+    SECURITY_USER_IDENTITY_ATTRIBUTES: list[IdAttr] = [
+        id_attr(
+            "username", mapper=fs.uia_username_mapper, case_insensitive=False)]
     SECURITY_REDIRECT_VALIDATE_MODE: str = "regex"
+    # Overrides default secure = False to require HTTPS.
+    SECURITY_CSRF_COOKIE: dict[str, Any] = {
+        "samesite": "Strict", "httponly": False, "secure": True}
     SECURITY_MSG_USERNAME_INVALID_LENGTH: tuple[str, str] = (
         "Username must be %(min)d – %(max)d characters", "error")
 
