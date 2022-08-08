@@ -25,6 +25,11 @@ def make_app() -> flask.Flask:
             app.register_error_handler(code, error_handler(code))
 
     @app.route("/")
+    def root() -> flask.Response:
+        # noinspection PyUnresolvedReferences
+        return app.redirect(app.url_for("home"))
+
+    @app.route("/home")
     def home() -> flask.Response:
         # noinspection PyUnresolvedReferences
         return app.redirect(security.login_url)
