@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 import flask
 import flask_security
@@ -17,20 +17,35 @@ def init_app() -> None:
     hat.ActiveHatModel.client = flask.g.hat_client = s.hat_client()
 
 
+UserIdentityAttribute = dict[str, dict[str, Any]]
+Mapper = Callable[[str], Optional[str]]
+
+
+def user_id_attribute(
+        attribute: str, mapper: Mapper, case_insensitive: bool
+) -> UserIdentityAttribute:
+    return {attribute: {
+        "mapper": mapper,
+        "case_insensitive": case_insensitive}}
+
+
 # noinspection PyPep8Naming
 class Settings(pydantic.BaseSettings):
-    # Lowercase attributes: internal usage
+    # Lowercase attributes are for internal-use only.
+    # Flask only imports uppercase attributes.
+
+    # Secrets
     hat_username: str
     hat_password: str
     hat_namespace: str
-    # Uppercase attributes: export directly
+    SECRET_KEY: str
+    SECURITY_LOGIN_SALT: str
+    SECURITY_PASSWORD_SALT: str
+
     FLASK_DEBUG: bool = True
     ASSETS_ROOT: DirectoryPath = "./static/assets"  # Relative to the app root
     EMAIL_DOMAIN: str = "xmail.com"
     PAGES_DIR: str = "home"  # Relative to "templates" dir. Do NOT include "./"
-    SECRET_KEY: str
-    SECURITY_LOGIN_SALT: str
-    SECURITY_PASSWORD_SALT: str
     SECURITY_PASSWORD_HASH: str = "bcrypt"
     SECURITY_PASSWORD_COMPLEXITY_CHECKER: Optional[str] = "zxcvbn"
     SECURITY_PASSWORD_CHECK_BREACHED: Optional[str] = "best-effort"
@@ -40,16 +55,16 @@ class Settings(pydantic.BaseSettings):
     SECURITY_LOGIN_WITHOUT_CONFIRMATION: bool = True
     SECURITY_USERNAME_ENABLE: bool = True
     SECURITY_USERNAME_REQUIRED: bool = True
-    SECURITY_USER_IDENTITY_ATTRIBUTES = [
-        {"username": {
-            "mapper": flask_security.uia_username_mapper,
-            "case_insensitive": False}}]
+    SECURITY_USER_IDENTITY_ATTRIBUTES: list[UserIdentityAttribute] = [
+        user_id_attribute(
+            attribute="username",
+            mapper=flask_security.uia_username_mapper,
+            case_insensitive=False)]
     SECURITY_REDIRECT_VALIDATE_MODE: str = "regex"
-    SECURITY_MSG_USERNAME_INVALID_LENGTH: list[str] = [
-        "Username must be %(min)d – %(max)d characters", "error"]
+    SECURITY_MSG_USERNAME_INVALID_LENGTH: tuple[str, str] = (
+        "Username must be %(min)d – %(max)d characters", "error")
 
     class Config(pydantic.BaseSettings.Config):
-        case_sensitive = False
         allow_mutation = False
 
     @property
