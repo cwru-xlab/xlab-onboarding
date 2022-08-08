@@ -25,13 +25,13 @@ def make_app() -> flask.Flask:
             app.register_error_handler(code, error_handler(code))
 
     @app.route("/")
-    def home():
+    def home() -> flask.Response:
         # noinspection PyUnresolvedReferences
         return app.redirect(security.login_url)
 
     @app.route("/inbox")
     @flask_security.auth_required()
-    def inbox():
+    def inbox() -> str:
         return flask.render_template(format_path("tables.html"))
 
     def get_emails(username: str) -> list[Email]:
