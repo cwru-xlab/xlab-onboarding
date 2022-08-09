@@ -18,6 +18,21 @@ class EmailHeaders(pydantic.BaseModel):
     class Config(hat.HatConfig):
         fields = {"sender": "from"}
 
+    @property
+    def short_date(self) -> str:
+        # Old: Aug 12. Otherwise: Tue 1:23 PM
+        return self.date.strftime("%b %d" if self._old() else "%a %I:%M %p")
+
+    @property
+    def full_date(self) -> str:
+        # Old: Tue Aug 12 – 1:23 PM. Otherwise: Tue 1:23 PM
+        return self.date.strftime(
+            "%a %b %d – %I:%M %p" if self._old() else "%a %I:%M %p")
+
+    def _old(self) -> bool:
+        age = datetime.datetime.utcnow() - self.date
+        return age >= datetime.timedelta(weeks=1)
+
 
 class Email(hat.ActiveHatModel):
     headers: EmailHeaders
