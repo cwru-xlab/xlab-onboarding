@@ -40,6 +40,7 @@ def make_app() -> flask.Flask:
     @app.route("/inbox")
     @fs.auth_required()
     def inbox() -> str:
+        hat_client().clear_cache()
         return flask.render_template(format_path("tables.html"))
 
     @app.route("/send/<to>")
@@ -60,10 +61,8 @@ def make_app() -> flask.Flask:
     @app.route("/received")
     @fs.auth_required()
     def received():
+        hat_client().clear_cache()
         return [e.dict() for e in Email.get(current_user().username)]
-
-    def current_user() -> auth.RedisUser:
-        return fs.current_user
 
     @app.route("/clear")
     @fs.auth_required()
@@ -102,10 +101,16 @@ def make_app() -> flask.Flask:
     return app
 
 
+def current_user() -> auth.RedisUser:
+    return fs.current_user
+
+
+def hat_client() -> HatClient:
+    return flask.current_app.config.HAT_CLIENT
+
+
 def teardown_appcontext(exception: BaseException | None) -> None:
-    hat_client: HatClient = flask.g.pop("hat_client", None)
-    if hat_client is not None:
-        hat_client.close()
+    hat_client().close()
 
 
 def error_handler(code: int) -> ErrorHandlerCallable:

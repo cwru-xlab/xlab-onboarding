@@ -12,9 +12,9 @@ def init_app() -> None:
     app = flask.current_app
     config = AttrConfig(app.config.root_path)
     config.update(app.config)
-    config.from_object(s := Settings())
+    config.from_object(Settings())
     app.config = config
-    hat.ActiveHatModel.client = flask.g.hat_client = s.hat_client()
+    hat.ActiveHatModel.client = config.HAT_CLIENT
 
 
 IdAttr = dict[str, dict[str, Any]]
@@ -69,7 +69,8 @@ class Settings(pydantic.BaseSettings):
     def SECURITY_REGISTER_USER_TEMPLATE(self) -> str:
         return f"{self.PAGES_DIR}/register.html"
 
-    def hat_client(self) -> hat.HatClient:
+    @property
+    def HAT_CLIENT(self) -> hat.HatClient:
         token = hat.ApiOwnerToken(self.hat_credential())
         return hat.HatClient(token, self.hat_namespace)
 
