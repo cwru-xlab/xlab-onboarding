@@ -41,7 +41,7 @@ def make_app() -> flask.Flask:
     @fs.auth_required()
     def inbox() -> str:
         hat_client().clear_cache()
-        emails = Email.get(current_user())
+        emails = get_emails()
         return flask.render_template(format_path("inbox.html"), emails=emails)
 
     @app.route("/send/<to>")
@@ -70,6 +70,10 @@ def make_app() -> flask.Flask:
     def clear():
         client = Email.client
         return client.delete(*client.get(current_user()))
+
+    def get_emails() -> list[Email]:
+        emails = Email.get(current_user())
+        return sorted(emails, key=lambda e: e.headers.date, reverse=True)
 
     def send_email(email: Email) -> Email:
         to, valid = check_to(email.headers.to)
