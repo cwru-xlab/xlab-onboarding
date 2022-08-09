@@ -41,7 +41,7 @@ def make_app() -> flask.Flask:
     @fs.auth_required()
     def inbox() -> str:
         hat_client().clear_cache()
-        return flask.render_template(format_path("tables.html"))
+        return flask.render_template(format_path("inbox.html"))
 
     @app.route("/send/<to>")
     @fs.auth_required()
