@@ -8,7 +8,7 @@ FROM nikolaik/python-nodejs:python3.9-nodejs16-slim as base
 WORKDIR /tmp
 # Export Javascript dependencies
 COPY ./src/web/static/assets/package*.json ./
-RUN npm install
+RUN npm install &
 # Export Python dependencies from Poetry
 RUN apt-get update && apt-get install -y --no-install-recommends curl
 RUN curl -sSL https://install.python-poetry.org | python3 - --version 1.1.14
@@ -18,9 +18,7 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 FROM tiangolo/meinheld-gunicorn-flask:python3.9 AS app
 WORKDIR /app
-COPY --from=base /tmp/package*.json ./static/assets/
 COPY --from=base /tmp/requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
-COPY ./src/web ./
 EXPOSE 8000
 CMD ["gunicorn", "--bind", "0.0.0.0:8000" ,"main:app"]

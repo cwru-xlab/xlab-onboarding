@@ -16,8 +16,7 @@ services:
       # Pick up code changes while running
       # Right-hand directory must match the target WORKDIR in Dockerfile
       - ./web/src/web:/app
-    env_file:
-      - ./web/secrets.env
+    env_file: ./web/secrets.env
     environment:
       REDIS_OM_URL: redis://db:6379
   db:
