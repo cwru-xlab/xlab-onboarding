@@ -61,9 +61,6 @@ class Settings(pydantic.BaseSettings):
     SECURITY_MSG_USERNAME_INVALID_LENGTH: tuple[str, str] = (
         "Username must be %(min)d – %(max)d characters", "error")
 
-    class Config(pydantic.BaseSettings.Config):
-        allow_mutation = False
-
     @property
     def SECURITY_LOGIN_USER_TEMPLATE(self) -> str:
         return f"{self.PAGES_DIR}/login.html"
@@ -74,7 +71,7 @@ class Settings(pydantic.BaseSettings):
 
     def hat_client(self) -> hat.HatClient:
         token = hat.ApiOwnerToken(self.hat_credential())
-        return hat.HatClient(token)
+        return hat.HatClient(token, self.hat_namespace)
 
     def hat_credential(self) -> Credential:
         class HatCredential(Credential):

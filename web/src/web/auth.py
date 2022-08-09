@@ -103,6 +103,7 @@ class UsernameRegisterForm(fs.RegisterForm):
 
 
 def init_app() -> fs.Security:
-    flask.g.users = RedisUserDatastore()
     return fs.Security(
-        flask.current_app, flask.g.users, register_form=UsernameRegisterForm)
+        app=flask.current_app,
+        datastore=RedisUserDatastore(),
+        register_form=UsernameRegisterForm)

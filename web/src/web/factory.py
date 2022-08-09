@@ -1,17 +1,20 @@
 from __future__ import annotations
 
 import os.path
+import pprint
+import sys
+from typing import cast
 
 import flask
 import flask_security as fs
 from flask.typing import ErrorHandlerCallable
 from hat import HatClient
-from pydantic import NameEmail
+from pydantic import EmailStr
 
 import auth
 import settings
 from auth import RedisUserDatastore
-from models import Email
+from models import Email, EmailHeaders
 from settings import AttrConfig
 
 
@@ -39,26 +42,62 @@ def make_app() -> flask.Flask:
     def inbox() -> str:
         return flask.render_template(format_path("tables.html"))
 
+    @app.route("/send/<to>")
+    @fs.auth_required()
+    def send(to: str):
+        email = Email(
+            headers=EmailHeaders(
+                to=f"{to}@xmail.com",
+                sender=f"{current_user().username}@xmail.com",
+                subject="Hello world!"),
+            body="Can you hear me?")
+        pprint.pp(email.dict(), indent=2, stream=sys.stderr)
+        if sent := send_email(email):
+            return sent.dict()
+        else:
+            return "Email not sent", 200
+
+    @app.route("/received")
+    @fs.auth_required()
+    def received():
+        return [e.dict() for e in Email.get(current_user().username)]
+
+    def current_user() -> auth.RedisUser:
+        return fs.current_user
+
+    @app.route("/clear")
+    @fs.auth_required()
+    def clear():
+        client = Email.client
+        return client.delete(*client.get(current_user().username))
+
     def get_emails(username: str) -> list[Email]:
         return Email.get(username)
 
     def delete_email(email: Email) -> None:
         email.delete()
 
-    def send_email(email: Email) -> None:
-        email.save(check_to(email.headers.to))
+    def send_email(email: Email) -> Email:
+        to, valid = check_to(email.headers.to)
+        if valid:
+            return email.save(to)
 
-    def check_to(to: NameEmail) -> str:
-        username, domain = to.email.split("@")
+    def check_to(to: EmailStr) -> tuple[str, bool]:
+        username, domain = to.split("@")
         # Check that email domain is correct.
         config: AttrConfig = flask.current_app.config
+        valid = True
         if domain != config.EMAIL_DOMAIN:
-            raise ValueError(f"Email domain must be {config.EMAIL_DOMAIN}")
+            print(
+                f"Email domain must be {config.EMAIL_DOMAIN}; got {domain}",
+                file=sys.stderr)
+            valid = False
         # Check that the email address exists.
-        users: RedisUserDatastore = flask.g.get("users")
+        users = cast(RedisUserDatastore, security.datastore)
         if not users.find_user(username=username):
-            raise ValueError(f"{to.email} does not exist")
-        return username
+            print(f"{to} does not exist", file=sys.stderr)
+            valid = False
+        return username, valid
 
     return app
 
