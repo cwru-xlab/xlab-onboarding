@@ -23187,7 +23187,8 @@ fieldset:disabled .btn {
 
 @media (min-width: 992px) {
   .content {
-    margin-left: 260px;
+    margin-left: 15px;
+    margin-right: 15px;
   }
 }
 

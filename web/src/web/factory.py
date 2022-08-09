@@ -41,7 +41,8 @@ def make_app() -> flask.Flask:
     @fs.auth_required()
     def inbox() -> str:
         hat_client().clear_cache()
-        return flask.render_template(format_path("inbox.html"))
+        emails = Email.get(current_user())
+        return flask.render_template(format_path("inbox.html"), emails=emails)
 
     @app.route("/send/<to>")
     @fs.auth_required()
@@ -49,7 +50,7 @@ def make_app() -> flask.Flask:
         email = Email(
             headers=EmailHeaders(
                 to=f"{to}@xmail.com",
-                sender=f"{current_user().username}@xmail.com",
+                sender=f"{current_user()}@xmail.com",
                 subject="Hello world!"),
             body="Can you hear me?")
         pprint.pp(email.dict(), indent=2, stream=sys.stderr)
@@ -62,19 +63,13 @@ def make_app() -> flask.Flask:
     @fs.auth_required()
     def received():
         hat_client().clear_cache()
-        return [e.dict() for e in Email.get(current_user().username)]
+        return [e.dict() for e in Email.get(current_user())]
 
     @app.route("/clear")
     @fs.auth_required()
     def clear():
         client = Email.client
-        return client.delete(*client.get(current_user().username))
-
-    def get_emails(username: str) -> list[Email]:
-        return Email.get(username)
-
-    def delete_email(email: Email) -> None:
-        email.delete()
+        return client.delete(*client.get(current_user()))
 
     def send_email(email: Email) -> Email:
         to, valid = check_to(email.headers.to)
@@ -101,8 +96,8 @@ def make_app() -> flask.Flask:
     return app
 
 
-def current_user() -> auth.RedisUser:
-    return fs.current_user
+def current_user() -> str:
+    return fs.current_user.username
 
 
 def hat_client() -> HatClient:
