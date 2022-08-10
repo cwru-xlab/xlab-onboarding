@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import itertools
 import os.path
-import pprint
 import sys
-from typing import cast
+from typing import Any, Callable, Iterable, cast
 
 import flask
 import flask_security as fs
@@ -14,6 +14,7 @@ from pydantic import EmailStr
 import auth
 import settings
 from auth import RedisUserDatastore
+from forms import EmailsToDelete
 from models import Email, EmailHeaders
 from settings import AttrConfig
 
@@ -37,12 +38,21 @@ def make_app() -> flask.Flask:
         # noinspection PyUnresolvedReferences
         return app.redirect(security.login_url)
 
-    @app.route("/inbox")
+    @app.route("/inbox", methods=["GET", "POST"])
     @fs.auth_required()
-    def inbox() -> str:
-        hat_client().clear_cache()
+    def inbox() -> str | flask.Response:
+        if get := flask.request.method == "GET":
+            hat_client().clear_cache()
         emails = get_emails()
-        return flask.render_template(format_path("inbox.html"), emails=emails)
+        form = create_form(emails)
+        if not get and form.validate_on_submit():
+            Email.delete_all(e for e in emails if e.uid in form.emails.data)
+            result = app.redirect(flask.url_for("inbox"))
+        else:
+            # This must be a collection to iterate over it multiple times.
+            emails = list(zip(emails, form.emails))
+            result = render_template("inbox.html", emails=emails, form=form)
+        return result
 
     @app.route("/send/<to>")
     @fs.auth_required()
@@ -53,7 +63,6 @@ def make_app() -> flask.Flask:
                 sender=f"{current_user()}@xmail.com",
                 subject="Hello world!"),
             body="Can you hear me?")
-        pprint.pp(email.dict(), indent=2, stream=sys.stderr)
         if sent := send_email(email):
             return sent.dict()
         else:
@@ -70,10 +79,6 @@ def make_app() -> flask.Flask:
     def clear():
         client = Email.client
         return client.delete(*client.get(current_user()))
-
-    def get_emails() -> list[Email]:
-        emails = Email.get(current_user())
-        return sorted(emails, key=lambda e: e.headers.date, reverse=True)
 
     def send_email(email: Email) -> Email:
         to, valid = check_to(email.headers.to)
@@ -100,6 +105,18 @@ def make_app() -> flask.Flask:
     return app
 
 
+def get_emails() -> list[Email]:
+    # Emails should be returned in a consistent order to delete them.
+    emails = Email.get(current_user())
+    return sorted(emails, key=lambda e: e.headers.date, reverse=True)
+
+
+def create_form(emails: list[Email]) -> EmailsToDelete:
+    form = EmailsToDelete()
+    form.emails.choices = [e.uid for e in emails]
+    return form
+
+
 def current_user() -> str:
     return fs.current_user.username
 
@@ -113,9 +130,16 @@ def teardown_appcontext(exception: BaseException | None) -> None:
 
 
 def error_handler(code: int) -> ErrorHandlerCallable:
-    template = format_path(f"{code}.html")
-    return lambda e: (flask.render_template(template), code)
+    return lambda e: (render_template(f"{code}.html"), code)
 
 
-def format_path(path: str) -> str:
-    return os.path.join(flask.current_app.config.PAGES_DIR, path)
+def render_template(path: str, **context) -> str:
+    path = os.path.join(flask.current_app.config.PAGES_DIR, path)
+    return flask.render_template(path, **context)
+
+
+def split(iterable: Iterable, pred: Callable[[Any], bool]) -> tuple[list, list]:
+    iterable = list(iterable)
+    true = list(filter(pred, iterable))
+    false = list(itertools.filterfalse(pred, iterable))
+    return true, false

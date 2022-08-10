@@ -305,7 +305,7 @@ email = ["email-validator"]
 
 [[package]]
 name = "hat-py-sdk"
-version = "0.17.4"
+version = "0.17.7"
 description = ""
 category = "main"
 optional = false
@@ -325,8 +325,8 @@ requests-cache = "^0.9.5"
 [package.source]
 type = "git"
 url = "https://github.com/rtatton/hat-py-sdk"
-reference = "v0.17.4"
-resolved_reference = "07d2e4701ffda4000a1ab6a080c6a4dd57021936"
+reference = "v0.17.7"
+resolved_reference = "ec9aeaa48fadc37975553d325f3dac13a97c7e5c"
 
 [[package]]
 name = "hiredis"
@@ -664,7 +664,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "types-redis"
-version = "4.3.13"
+version = "4.3.14"
 description = "Typing stubs for redis"
 category = "main"
 optional = false
@@ -777,7 +777,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "bf9bad2bcaaff6fe66c99a29c6e36e16c9b6d124cce1a7a6d5602f40b2ef2ebd"
+content-hash = "4c78894408fdf16b2a1e0e265367796526ee3fdf71b6d4d0fc3b0ee076abf89c"
 
 [metadata.files]
 aioredis = [
@@ -1216,8 +1216,8 @@ six = [
     { file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926" },
 ]
 types-redis = [
-    { file = "types-redis-4.3.13.tar.gz", hash = "sha256:b8334a96a2f431521bfa72205b343129acdc5a646ffcfb304d80a1cd0deff548" },
-    { file = "types_redis-4.3.13-py3-none-any.whl", hash = "sha256:cc2209ecfab2ad6df1e3eec730c06f9b2dec77f4164eb86e04dad455a651b394" },
+    { file = "types-redis-4.3.14.tar.gz", hash = "sha256:aa5955ff5f10b87a9021c031eb002a544a41a0a6280084ec0758a8a812a375c4" },
+    { file = "types_redis-4.3.14-py3-none-any.whl", hash = "sha256:c5518f14df81f2070bb075b292309331b1be283f1927adf3f04983eeb05e2f98" },
 ]
 types-six = [
     { file = "types-six-1.16.18.tar.gz", hash = "sha256:26f481fabb65321ba428bdfb82c97fc638e00be6b20efa83915b007cf3893e28" },
