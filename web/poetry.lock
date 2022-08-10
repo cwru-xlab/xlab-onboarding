@@ -305,7 +305,7 @@ email = ["email-validator"]
 
 [[package]]
 name = "hat-py-sdk"
-version = "0.17.7"
+version = "0.17.8"
 description = ""
 category = "main"
 optional = false
@@ -325,8 +325,8 @@ requests-cache = "^0.9.5"
 [package.source]
 type = "git"
 url = "https://github.com/rtatton/hat-py-sdk"
-reference = "v0.17.7"
-resolved_reference = "ec9aeaa48fadc37975553d325f3dac13a97c7e5c"
+reference = "v0.17.8"
+resolved_reference = "224b7d7fcc3a03f37824085c5f7abe371486b4ce"
 
 [[package]]
 name = "hiredis"
@@ -777,7 +777,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "4c78894408fdf16b2a1e0e265367796526ee3fdf71b6d4d0fc3b0ee076abf89c"
+content-hash = "828f1c218005e712d87f6a7996647e7baf4dd8476c29add6ad561160dec926f5"
 
 [metadata.files]
 aioredis = [
