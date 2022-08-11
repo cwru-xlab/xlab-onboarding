@@ -17,7 +17,13 @@
             <div class="mb-3 mb-lg-0">
                 <h1 class="h4">Inbox</h1>
             </div>
-            <div class="mb-3 mb-lg-0">
+            <div>
+                <button class="btn btn-block btn-primary"
+                        data-bs-target="#modal-compose"
+                        data-bs-toggle="modal"
+                        type="button">
+                    Compose
+                </button>
                 {{ form.submit(class="btn btn-outline-danger") }}
             </div>
         </div>
@@ -61,11 +67,80 @@
         </div>
     </div>
 </form>
+<!-- Modal Content -->
+<div aria-hidden="true" aria-labelledby="modal-compose" class="modal fade"
+     id="modal-compose"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form action="#">
+                    <!-- Form -->
+                    <div class="mb-3">
+                        <label for="to">To</label>
+                        <div class="input-group">
+                            <input autofocus
+                                   class="form-control"
+                                   id="to"
+                                   placeholder="Username"
+                                   required
+                                   type="text">
+                            <div class="form-control">
+                                @{{ config.EMAIL_DOMAIN }}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Form -->
+                    <!-- Form -->
+                    <div class="mb-3">
+                        <label for="from">From</label>
+                        <input class="form-control"
+                               disabled
+                               id="from"
+                               placeholder="{{current_user}}@{{config.EMAIL_DOMAIN}}"
+                               type="email">
+                    </div>
+                    <!-- End of Form -->
+                    <!-- Form -->
+                    <div class="mb-3">
+                        <label for="subject">Subject</label>
+                        <input autofocus
+                               class="form-control"
+                               id="subject"
+                               placeholder="(No subject)"
+                               type="text">
+                    </div>
+                    <!-- End of Form -->
+                    <!-- Form -->
+                    <div class="mb-3">
+                        <label for="message">Message</label>
+                        <textarea autofocus
+                                  class="form-control"
+                                  id="message"
+                                  placeholder="Email message"
+                                  rows="3">
+                        </textarea>
+                    </div>
+                    <!-- End of Form -->
+                </form>
+                <button class="btn btn-secondary" type="button">Send</button>
+                <button class="btn btn-link text-gray ms-auto"
+                        data-bs-dismiss="modal"
+                        type="button">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal Content -->
 {% for email, _ in emails %}
 <!-- Modal Content -->
-<div class="modal fade" id="modal-{{ email.uid }}" tabindex="-1"
+<div aria-hidden="true"
+     aria-labelledby="modal-{{ email.uid }}"
+     class="modal fade"
      role="dialog"
-     aria-labelledby="modal-{{ email.uid }}" aria-hidden="true">
+     id="modal-{{ email.uid }}"
+     tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
