@@ -7,13 +7,15 @@ from typing import Any, Optional, Type, TypeVar, Union, cast
 import flask
 import flask_security as fs
 import redis_om
-from flask_security import datastore, forms
+from flask_security import RoleMixin, UserMixin
+from flask_security.datastore import Datastore, UserDatastore
 from pydantic import StrictBool, StrictStr, conlist
-from redis_om import Field
+from redis_om import Field, JsonModel, RedisModel
 
-T = TypeVar("T", bound=redis_om.RedisModel)
-Permissions = Optional[
-    Union[str, set[StrictStr], conlist(StrictStr, unique_items=True)]]
+import forms
+
+T = TypeVar("T", bound=RedisModel)
+Permissions = Optional[Union[str, set[str], conlist(str, unique_items=True)]]
 
 
 def migrate(model: T) -> T:
@@ -26,13 +28,13 @@ def migrate(model: T) -> T:
 
 
 @migrate
-class RedisRole(redis_om.JsonModel, fs.RoleMixin):
+class RedisRole(JsonModel, RoleMixin):
     name: StrictStr = Field(index=True)
     permissions: Permissions = set()
 
 
 @migrate
-class RedisUser(redis_om.JsonModel, fs.UserMixin):
+class RedisUser(JsonModel, UserMixin):
     fs_uniquifier: StrictStr = Field(index=True)
     username: StrictStr = Field(index=True)
     password: StrictStr
@@ -46,7 +48,7 @@ class RedisUser(redis_om.JsonModel, fs.UserMixin):
 Model = TypeVar("Model", bound=Union[RedisUser, RedisRole])
 
 
-class RedisDatastore(datastore.Datastore):
+class RedisDatastore(Datastore):
     __slots__ = ()
 
     def __init__(self, *args, **kwargs):
@@ -59,7 +61,7 @@ class RedisDatastore(datastore.Datastore):
         Model.delete(model.pk)
 
 
-class RedisUserDatastore(fs.UserDatastore, RedisDatastore):
+class RedisUserDatastore(UserDatastore, RedisDatastore):
     __slots__ = ()
 
     _supported = {"username", "fs_uniquifier"}
@@ -96,14 +98,8 @@ class RedisUserDatastore(fs.UserDatastore, RedisDatastore):
         return result[0] if result else None
 
 
-class UsernameRegisterForm(fs.RegisterForm):
-    """Hack to utilize RegisterForm, but use username instead of email."""
-
-    email = forms.EmailField()  # Default: no validation
-
-
 def init_app() -> fs.Security:
     return fs.Security(
         app=flask.current_app,
         datastore=RedisUserDatastore(),
-        register_form=UsernameRegisterForm)
+        register_form=forms.UsernameRegisterForm)

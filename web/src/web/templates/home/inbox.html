@@ -11,7 +11,7 @@
 
 <!--suppress HtmlUnknownTarget -->
 <form action="{{ url_for('inbox') }}" method="POST">
-    {{ form.hidden_tag() }}
+    {{ delete.hidden_tag() }}
     <div class="py-4">
         <div class="d-flex justify-content-between w-100 flex-wrap">
             <div class="mb-3 mb-lg-0">
@@ -24,7 +24,7 @@
                         type="button">
                     Compose
                 </button>
-                {{ form.submit(class="btn btn-outline-danger") }}
+                {{ delete.submit(class="btn btn-outline-danger") }}
             </div>
         </div>
     </div>
@@ -68,30 +68,23 @@
     </div>
 </form>
 <!-- Modal Content -->
-<div aria-hidden="true" aria-labelledby="modal-compose" class="modal fade"
+<div aria-hidden="true"
+     aria-labelledby="modal-compose"
+     class="modal fade"
      id="modal-compose"
-     role="dialog" tabindex="-1">
+     role="dialog"
+     tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <form action="#">
-                    <!-- Form -->
+                <form action="{{ url_for('inbox') }}" method="POST">
+                    {{ compose.hidden_tag() }}
                     <div class="mb-3">
-                        <label for="to">To</label>
-                        <div class="input-group">
-                            <input autofocus
-                                   class="form-control"
-                                   id="to"
-                                   placeholder="Username"
-                                   required
-                                   type="text">
-                            <div class="form-control">
-                                @{{ config.EMAIL_DOMAIN }}
-                            </div>
-                        </div>
+                        <label>To</label>
+                        {% set placeholder = "recipient@" + config.EMAIL_DOMAIN
+                        %}
+                        {{with_errors(compose.to,class="form-control",placeholder=placeholder)}}
                     </div>
-                    <!-- End of Form -->
-                    <!-- Form -->
                     <div class="mb-3">
                         <label for="from">From</label>
                         <input class="form-control"
@@ -100,34 +93,20 @@
                                placeholder="{{current_user}}@{{config.EMAIL_DOMAIN}}"
                                type="email">
                     </div>
-                    <!-- End of Form -->
-                    <!-- Form -->
                     <div class="mb-3">
-                        <label for="subject">Subject</label>
-                        <input autofocus
-                               class="form-control"
-                               id="subject"
-                               placeholder="(No subject)"
-                               type="text">
+                        <label>Subject</label>
+                        {{with_errors(compose.subject,class="form-control",placeholder=compose.default)}}
                     </div>
-                    <!-- End of Form -->
-                    <!-- Form -->
                     <div class="mb-3">
-                        <label for="message">Message</label>
-                        <textarea autofocus
-                                  class="form-control"
-                                  id="message"
-                                  placeholder="Email message"
-                                  rows="3">
-                        </textarea>
+                        <label>Message</label>
+                        {{with_errors(compose.body,class="form-control",placeholder="Message",rows="3")}}
                     </div>
-                    <!-- End of Form -->
+                    {{with_errors(compose.submit,class="btn btn-secondary")}}
+                    <button class="btn btn-link text-gray ms-auto"
+                            data-bs-dismiss="modal"
+                            type="button">Close
+                    </button>
                 </form>
-                <button class="btn btn-secondary" type="button">Send</button>
-                <button class="btn btn-link text-gray ms-auto"
-                        data-bs-dismiss="modal"
-                        type="button">Close
-                </button>
             </div>
         </div>
     </div>
