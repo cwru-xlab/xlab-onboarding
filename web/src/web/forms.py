@@ -30,7 +30,7 @@ class DeleteEmailsForm(flask_wtf.FlaskForm):
     submit = wtforms.SubmitField("Delete")
 
     def __init__(self, emails: Iterable[Email], *args, **kwargs):
-        super(DeleteEmailsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.emails.choices = [e.uid for e in emails]
 
     def validate_on_submit(self, *args, **kwargs):
