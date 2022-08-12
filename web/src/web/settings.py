@@ -5,7 +5,7 @@ import flask_security as fs
 import hat
 import pydantic
 from keyring.credentials import Credential
-from pydantic import DirectoryPath
+from pydantic import DirectoryPath, StrictBool, StrictStr, conlist
 
 
 def init_app() -> None:
@@ -17,8 +17,8 @@ def init_app() -> None:
     hat.ActiveHatModel.client = config.HAT_CLIENT
 
 
-IdAttr = dict[str, dict[str, Any]]
-Mapper = Callable[[str], Optional[str]]
+IdAttr = dict[StrictStr, dict[StrictStr, Any]]
+Mapper = Callable[[StrictStr], Optional[StrictStr]]
 
 
 def id_attr(attr: str, *, mapper: Mapper, case_insensitive: bool) -> IdAttr:
@@ -31,34 +31,35 @@ class Settings(pydantic.BaseSettings):
     # Flask only imports uppercase attributes.
 
     # Secrets
-    hat_username: str
-    hat_password: str
-    hat_namespace: str
-    SECRET_KEY: str
-    SECURITY_LOGIN_SALT: str
-    SECURITY_PASSWORD_SALT: str
+    hat_username: StrictStr
+    hat_password: StrictStr
+    hat_namespace: StrictStr
+    SECRET_KEY: StrictStr
+    SECURITY_LOGIN_SALT: StrictStr
+    SECURITY_PASSWORD_SALT: StrictStr
 
-    FLASK_DEBUG: bool = True
+    FLASK_DEBUG: StrictBool = True
     ASSETS_ROOT: DirectoryPath = "./static/assets"  # Relative to the app root
-    EMAIL_DOMAIN: str = "xmail.com"
-    PAGES_DIR: str = "home"  # Relative to "templates" dir. Do NOT include "./"
-    SECURITY_PASSWORD_HASH: str = "bcrypt"
-    SECURITY_PASSWORD_COMPLEXITY_CHECKER: Optional[str] = "zxcvbn"
-    SECURITY_PASSWORD_CHECK_BREACHED: Optional[str] = "best-effort"
-    SECURITY_POST_LOGIN_VIEW: str = "/inbox"
-    SECURITY_REGISTERABLE: bool = True
-    SECURITY_SEND_REGISTER_EMAIL: bool = False
-    SECURITY_LOGIN_WITHOUT_CONFIRMATION: bool = True
-    SECURITY_USERNAME_ENABLE: bool = True
-    SECURITY_USERNAME_REQUIRED: bool = True
-    SECURITY_USER_IDENTITY_ATTRIBUTES: list[IdAttr] = [
+    EMAIL_DOMAIN: StrictStr = "xmail.com"
+    # Relative to "templates" dir. Do NOT include "./"
+    PAGES_DIR: StrictStr = "home"
+    SECURITY_PASSWORD_HASH: StrictStr = "bcrypt"
+    SECURITY_PASSWORD_COMPLEXITY_CHECKER: Optional[StrictStr] = "zxcvbn"
+    SECURITY_PASSWORD_CHECK_BREACHED: Optional[StrictStr] = "best-effort"
+    SECURITY_POST_LOGIN_VIEW: StrictStr = "/inbox"
+    SECURITY_REGISTERABLE: StrictBool = True
+    SECURITY_SEND_REGISTER_EMAIL: StrictBool = False
+    SECURITY_LOGIN_WITHOUT_CONFIRMATION: StrictBool = True
+    SECURITY_USERNAME_ENABLE: StrictBool = True
+    SECURITY_USERNAME_REQUIRED: StrictBool = True
+    SECURITY_USER_IDENTITY_ATTRIBUTES: conlist(IdAttr) = [
         id_attr(
             "username", mapper=fs.uia_username_mapper, case_insensitive=False)]
-    SECURITY_REDIRECT_VALIDATE_MODE: str = "regex"
+    SECURITY_REDIRECT_VALIDATE_MODE: StrictStr = "regex"
     # Overrides default secure = False to require HTTPS.
-    SECURITY_CSRF_COOKIE: dict[str, Any] = {
+    SECURITY_CSRF_COOKIE: dict[StrictStr, Any] = {
         "samesite": "Strict", "httponly": False, "secure": True}
-    SECURITY_MSG_USERNAME_INVALID_LENGTH: tuple[str, str] = (
+    SECURITY_MSG_USERNAME_INVALID_LENGTH: tuple[StrictStr, StrictStr] = (
         "Username must be %(min)d – %(max)d characters", "error")
 
     @property
