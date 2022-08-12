@@ -1,5 +1,5 @@
 up:
-	@docker-compose up --detach --build
+	@docker-compose up --build
 	@docker image prune --force
 
 stop:
