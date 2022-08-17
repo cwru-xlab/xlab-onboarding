@@ -72,8 +72,9 @@ class Settings(pydantic.BaseSettings):
 
     @property
     def HAT_CLIENT(self) -> hat.HatClient:
-        token = hat.ApiOwnerToken(self.hat_credential())
-        return hat.HatClient(token, self.hat_namespace)
+        http_client = hat.HttpClient()
+        token = hat.CredentialOwnerToken(http_client, self.hat_credential())
+        return hat.AsyncHatClient(http_client, token, self.hat_namespace).to_sync()
 
     def hat_credential(self) -> Credential:
         class HatCredential(Credential):
