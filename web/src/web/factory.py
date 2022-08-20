@@ -7,7 +7,7 @@ import flask
 import flask_security as fs
 from flask import Response
 from flask.typing import ErrorHandlerCallable
-from hat import HatClient
+from hat import client
 from pydantic import EmailStr
 
 import auth
@@ -18,7 +18,6 @@ import settings
 
 def make_app() -> flask.Flask:
     app = flask.Flask(__name__)
-    app.teardown_appcontext(teardown_appcontext)
     with app.app_context():
         settings.init_app()  # Run early on to load configuration.
         security = auth.init_app()
@@ -72,9 +71,8 @@ def compose_email(form: forms.ComposeEmailForm) -> Response:
             to=form.to.data,
             sender=current_user_address(),
             subject=form.subject.data),
-        body=form.body.data,
-        endpoint=form.username)
-    email.save()
+        body=form.body.data)
+    email.save(form.username)
     return redirect_to_inbox()
 
 
@@ -107,13 +105,9 @@ def current_user_address() -> EmailStr:
     return forms.format_address(current_user())
 
 
-def teardown_appcontext(exception: BaseException | None) -> None:
-    hat_client().close()
-
-
 def current_user() -> str:
     return fs.current_user.username
 
 
-def hat_client() -> HatClient:
+def hat_client() -> client.HatClient:
     return flask.current_app.config.HAT_CLIENT

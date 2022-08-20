@@ -2,8 +2,8 @@ from typing import Any, Callable, Optional
 
 import flask
 import flask_security as fs
-import hat
 import pydantic
+from hat import client
 from keyring.credentials import Credential
 from pydantic import DirectoryPath, StrictBool, StrictStr, conlist
 
@@ -14,7 +14,7 @@ def init_app() -> None:
     config.update(app.config)
     config.from_object(Settings())
     app.config = config
-    hat.ActiveHatModel.client = config.HAT_CLIENT
+    client.set_client(config.HAT_CLIENT)
 
 
 IdAttr = dict[StrictStr, dict[StrictStr, Any]]
@@ -71,10 +71,10 @@ class Settings(pydantic.BaseSettings):
         return f"{self.PAGES_DIR}/register.html"
 
     @property
-    def HAT_CLIENT(self) -> hat.HatClient:
-        http_client = hat.HttpClient()
-        token = hat.CredentialOwnerToken(http_client, self.hat_credential())
-        return hat.AsyncHatClient(http_client, token, self.hat_namespace).to_sync()
+    def HAT_CLIENT(self) -> client.HatClient:
+        http_client = client.HttpClient()
+        token = client.CredentialOwnerToken(http_client, self.hat_credential())
+        return client.HatClient(http_client, token, self.hat_namespace)
 
     def hat_credential(self) -> Credential:
         class HatCredential(Credential):

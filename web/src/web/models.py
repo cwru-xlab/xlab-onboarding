@@ -1,7 +1,7 @@
 import datetime
 
-import hat
 import pydantic
+from hat import client, model
 from pydantic import EmailStr, StrictStr, constr
 
 
@@ -15,7 +15,7 @@ class EmailHeaders(pydantic.BaseModel):
     subject: constr(strip_whitespace=True, strict=True)
     date: datetime.datetime = datetime_field()
 
-    class Config(hat.HatConfig):
+    class Config(model.HatConfig):
         fields = {"sender": "from"}
 
     @property
@@ -34,6 +34,6 @@ class EmailHeaders(pydantic.BaseModel):
         return age >= datetime.timedelta(weeks=1)
 
 
-class Email(hat.ActiveHatModel):
+class Email(client.ActiveHatModel):
     headers: EmailHeaders
     body: StrictStr
