@@ -43,7 +43,7 @@ class ComposeEmailForm(flask_wtf.FlaskForm):
     to = wtforms.EmailField(validators=[validators.DataRequired()])
     subject = wtforms.StringField(
         default="(No subject)", validators=[validators.DataRequired()])
-    body = wtforms.TextAreaField(validators=[validators.DataRequired()])
+    body = wtforms.TextAreaField()
     submit = wtforms.SubmitField("Send")
 
     def __init__(self, users: UserDatastore, *args, **kwargs):

@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 
 import pydantic
 from hat import client, model
@@ -36,4 +37,4 @@ class EmailHeaders(pydantic.BaseModel):
 
 class Email(client.ActiveHatModel):
     headers: EmailHeaders
-    body: StrictStr
+    body: Optional[StrictStr]
