@@ -37,8 +37,7 @@ def make_app() -> flask.Flask:
     @app.route("/inbox", methods=["GET", "POST"])
     @fs.auth_required()
     def inbox() -> str | Response:
-        if get := flask.request.method == "GET":
-            hat_client().clear_cache()
+        get = flask.request.method == "GET"
         emails = get_emails()
         delete = forms.DeleteEmailsForm(emails)
         compose = forms.ComposeEmailForm(security.datastore)

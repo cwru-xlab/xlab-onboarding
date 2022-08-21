@@ -14,34 +14,12 @@ typing-extensions = "*"
 hiredis = ["hiredis (>=1.0)"]
 
 [[package]]
-name = "appdirs"
-version = "1.4.4"
-description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "async-timeout"
 version = "4.0.2"
 description = "Timeout context manager for asyncio programs"
 category = "main"
 optional = false
 python-versions = ">=3.6"
-
-[[package]]
-name = "attrs"
-version = "21.4.0"
-description = "Classes Without Boilerplate"
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-
-[package.extras]
-dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "furo", "sphinx", "sphinx-notfound-page", "pre-commit", "cloudpickle"]
-docs = ["furo", "sphinx", "zope.interface", "sphinx-notfound-page"]
-tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "cloudpickle"]
-tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
 
 [[package]]
 name = "bleach"
@@ -66,18 +44,6 @@ description = "Fast, simple object-to-object and broadcast signaling"
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-
-[[package]]
-name = "cattrs"
-version = "22.1.0"
-description = "Composable complex class support for attrs and dataclasses."
-category = "main"
-optional = false
-python-versions = ">=3.7,<4.0"
-
-[package.dependencies]
-attrs = ">=20"
-exceptiongroup = { version = "*", markers = "python_version <= \"3.10\"" }
 
 [[package]]
 name = "certifi"
@@ -210,17 +176,6 @@ dnspython = ">=1.15.0"
 idna = ">=2.0.0"
 
 [[package]]
-name = "exceptiongroup"
-version = "1.0.0rc8"
-description = "Backport of PEP 654 (exception groups)"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.extras]
-test = ["pytest (>=6)"]
-
-[[package]]
 name = "flask"
 version = "2.2.2"
 description = "A simple framework for building complex web applications."
@@ -305,7 +260,7 @@ email = ["email-validator"]
 
 [[package]]
 name = "hat-py-sdk"
-version = "0.26.2"
+version = "0.28.1"
 description = ""
 category = "main"
 optional = false
@@ -316,11 +271,10 @@ develop = false
 humps = "^0.2.2"
 keyring = "^23.8.2"
 orjson = { version = "^3.7.12", optional = true }
-pydantic = "^1.9.1"
+pydantic = { version = "^1.9.1", extras = ["dotenv"] }
 PyJWT = { version = "^2.4.0", extras = ["crypto"] }
 python-ulid = { version = "^1.1.0", optional = true }
 requests = { version = "^2.28.1", optional = true }
-requests-cache = { version = "^0.9.5", optional = true }
 
 [package.extras]
 async = ["aiodns (>=3.0.0,<4.0.0)", "cchardet (>=2.1.7,<3.0.0)"]
@@ -333,8 +287,8 @@ ulid = ["python-ulid (>=1.1.0,<2.0.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/rtatton/hat-py-sdk"
-reference = "v0.26.2"
-resolved_reference = "eca5b8ed8d230a91ec9202abccf4b36243075d96"
+reference = "v0.28.1"
+resolved_reference = "3ea173eb863b23e06bcd68564d12355509691de2"
 
 [[package]]
 name = "hiredis"
@@ -495,6 +449,7 @@ python-versions = ">=3.6.1"
 
 [package.dependencies]
 email-validator = { version = ">=1.0.3", optional = true, markers = "extra == \"email\"" }
+python-dotenv = { version = ">=0.10.4", optional = true, markers = "extra == \"dotenv\"" }
 typing-extensions = ">=3.7.4.3"
 
 [package.extras]
@@ -622,34 +577,6 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
-name = "requests-cache"
-version = "0.9.5"
-description = "A transparent persistent cache for the requests library"
-category = "main"
-optional = false
-python-versions = ">=3.7,<4.0"
-
-[package.dependencies]
-appdirs = ">=1.4.4,<2.0.0"
-attrs = ">=21.2,<22.0"
-cattrs = ">=1.8,<=22.2"
-exceptiongroup = { version = ">=1.0.0-rc.3", markers = "python_full_version >= \"3.10.0\" and python_full_version < \"4.0.0\"" }
-requests = ">=2.22,<3.0"
-url-normalize = ">=1.4,<2.0"
-urllib3 = ">=1.25.5,<2.0.0"
-
-[package.extras]
-dynamodb = ["boto3 (>=1.15,<2.0)", "botocore (>=1.18,<2.0)"]
-all = ["boto3 (>=1.15,<2.0)", "botocore (>=1.18,<2.0)", "pymongo (>=3)", "redis (>=3)", "itsdangerous (>=2.0,<3.0)", "pyyaml (>=5.4)", "ujson (>=4.0)"]
-mongodb = ["pymongo (>=3)"]
-redis = ["redis (>=3)"]
-bson = ["bson (>=0.5)"]
-security = ["itsdangerous (>=2.0,<3.0)"]
-yaml = ["pyyaml (>=5.4)"]
-json = ["ujson (>=4.0)"]
-docs = ["furo (>=2021.9.8)", "linkify-it-py (>=1.0.1,<2.0.0)", "myst-parser (>=0.15.1,<0.16.0)", "sphinx (==4.3.0)", "sphinx-autodoc-typehints (>=1.11,<2.0)", "sphinx-automodapi (>=0.13,<0.15)", "sphinx-copybutton (>=0.3,<0.5)", "sphinx-inline-tabs (>=2022.1.2b11)", "sphinx-notfound-page", "sphinx-panels (>=0.6,<0.7)", "sphinxcontrib-apidoc (>=0.3,<0.4)"]
-
-[[package]]
 name = "secretstorage"
 version = "3.3.3"
 description = "Python bindings to FreeDesktop.org Secret Service API"
@@ -671,7 +598,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "types-redis"
-version = "4.3.14"
+version = "4.3.15"
 description = "Typing stubs for redis"
 category = "main"
 optional = false
@@ -692,17 +619,6 @@ description = "Backported and Experimental Type Hints for Python 3.7+"
 category = "main"
 optional = false
 python-versions = ">=3.7"
-
-[[package]]
-name = "url-normalize"
-version = "1.4.3"
-description = "URL normalization for Python"
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
-
-[package.dependencies]
-six = "*"
 
 [[package]]
 name = "urllib3"
@@ -784,24 +700,16 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "c7d359d83da72a3a58047d94e3f884c841b4083f213d235669e940891de1accd"
+content-hash = "3715c3890c9a296494d7543741af78dee4bb3df6efca35a1460fcccd081eba5d"
 
 [metadata.files]
 aioredis = [
     { file = "aioredis-2.0.1-py3-none-any.whl", hash = "sha256:9ac0d0b3b485d293b8ca1987e6de8658d7dafcca1cddfcd1d506cae8cdebfdd6" },
     { file = "aioredis-2.0.1.tar.gz", hash = "sha256:eaa51aaf993f2d71f54b70527c440437ba65340588afeb786cd87c55c89cd98e" },
 ]
-appdirs = [
-    { file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128" },
-    { file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41" },
-]
 async-timeout = [
     { file = "async-timeout-4.0.2.tar.gz", hash = "sha256:2163e1640ddb52b7a8c80d0a67a08587e5d245cc9c553a74a847056bc2976b15" },
     { file = "async_timeout-4.0.2-py3-none-any.whl", hash = "sha256:8ca1e4fcf50d07413d66d1a5e416e42cfdf5851c981d679a09851a6853383b3c" },
-]
-attrs = [
-    { file = "attrs-21.4.0-py2.py3-none-any.whl", hash = "sha256:2d27e3784d7a565d36ab851fe94887c5eccd6a463168875832a1be79c82828b4" },
-    { file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd" },
 ]
 bleach = [
     { file = "bleach-5.0.1-py3-none-any.whl", hash = "sha256:085f7f33c15bd408dd9b17a4ad77c577db66d76203e5984b1bd59baeee948b2a" },
@@ -810,10 +718,6 @@ bleach = [
 blinker = [
     { file = "blinker-1.5-py2.py3-none-any.whl", hash = "sha256:1eb563df6fdbc39eeddc177d953203f99f097e9bf0e2b8f9f3cf18b6ca425e36" },
     { file = "blinker-1.5.tar.gz", hash = "sha256:923e5e2f69c155f2cc42dafbbd70e16e3fde24d2d4aa2ab72fbe386238892462" },
-]
-cattrs = [
-    { file = "cattrs-22.1.0-py3-none-any.whl", hash = "sha256:d55c477b4672f93606e992049f15d526dc7867e6c756cd6256d4af92e2b1e364" },
-    { file = "cattrs-22.1.0.tar.gz", hash = "sha256:94b67b64cf92c994f8784c40c082177dc916e0489a73a9a36b24eb18a9db40c6" },
 ]
 certifi = [
     { file = "certifi-2022.6.15-py3-none-any.whl", hash = "sha256:fe86415d55e84719d75f8b69414f6438ac3547d2078ab91b67e779ef69378412" },
@@ -940,10 +844,6 @@ dnspython = [
 email-validator = [
     { file = "email_validator-1.2.1-py2.py3-none-any.whl", hash = "sha256:c8589e691cf73eb99eed8d10ce0e9cbb05a0886ba920c8bcb7c82873f4c5789c" },
     { file = "email_validator-1.2.1.tar.gz", hash = "sha256:6757aea012d40516357c0ac2b1a4c31219ab2f899d26831334c5d069e8b6c3d8" },
-]
-exceptiongroup = [
-    { file = "exceptiongroup-1.0.0rc8-py3-none-any.whl", hash = "sha256:ab0a968e1ef769e55d9a596f4a89f7be9ffedbc9fdefdb77cc68cf5c33ce1035" },
-    { file = "exceptiongroup-1.0.0rc8.tar.gz", hash = "sha256:6990c24f06b8d33c8065cfe43e5e8a4bfa384e0358be036af9cc60b6321bd11a" },
 ]
 flask = [
     { file = "Flask-2.2.2-py3-none-any.whl", hash = "sha256:b9c46cc36662a7949f34b52d8ec7bb59c0d74ba08ba6cb9ce9adc1d8676d9526" },
@@ -1210,10 +1110,6 @@ requests = [
     { file = "requests-2.28.1-py3-none-any.whl", hash = "sha256:8fefa2a1a1365bf5520aac41836fbee479da67864514bdb821f31ce07ce65349" },
     { file = "requests-2.28.1.tar.gz", hash = "sha256:7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983" },
 ]
-requests-cache = [
-    { file = "requests-cache-0.9.5.tar.gz", hash = "sha256:bd67575f541f9c10f44f8b49d8d449fb55db8af2e27d93c56349f227b78e4b70" },
-    { file = "requests_cache-0.9.5-py3-none-any.whl", hash = "sha256:5343132acc8ca4d7810305aa1e8e46367e9c7c8379f7aea4e8c05f401499fc43" },
-]
 secretstorage = [
     { file = "SecretStorage-3.3.3-py3-none-any.whl", hash = "sha256:f356e6628222568e3af06f2eba8df495efa13b3b63081dafd4f7d9a7b7bc9f99" },
     { file = "SecretStorage-3.3.3.tar.gz", hash = "sha256:2403533ef369eca6d2ba81718576c5e0f564d5cca1b58f73a8b23e7d4eeebd77" },
@@ -1223,8 +1119,8 @@ six = [
     { file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926" },
 ]
 types-redis = [
-    { file = "types-redis-4.3.14.tar.gz", hash = "sha256:aa5955ff5f10b87a9021c031eb002a544a41a0a6280084ec0758a8a812a375c4" },
-    { file = "types_redis-4.3.14-py3-none-any.whl", hash = "sha256:c5518f14df81f2070bb075b292309331b1be283f1927adf3f04983eeb05e2f98" },
+    { file = "types-redis-4.3.15.tar.gz", hash = "sha256:bcf2c852c2d0f6f999f10180bdfcad0bbfa972175826ced70a5ef58b71004b6c" },
+    { file = "types_redis-4.3.15-py3-none-any.whl", hash = "sha256:b42774d74081e79a12793856be2666ae952dd2b2ecfce92501fc1d505005ca61" },
 ]
 types-six = [
     { file = "types-six-1.16.18.tar.gz", hash = "sha256:26f481fabb65321ba428bdfb82c97fc638e00be6b20efa83915b007cf3893e28" },
@@ -1233,10 +1129,6 @@ types-six = [
 typing-extensions = [
     { file = "typing_extensions-4.3.0-py3-none-any.whl", hash = "sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02" },
     { file = "typing_extensions-4.3.0.tar.gz", hash = "sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6" },
-]
-url-normalize = [
-    { file = "url-normalize-1.4.3.tar.gz", hash = "sha256:d23d3a070ac52a67b83a1c59a0e68f8608d1cd538783b401bc9de2c0fac999b2" },
-    { file = "url_normalize-1.4.3-py2.py3-none-any.whl", hash = "sha256:ec3c301f04e5bb676d333a7fa162fa977ad2ca04b7e652bfc9fac4e405728eed" },
 ]
 urllib3 = [
     { file = "urllib3-1.26.11-py2.py3-none-any.whl", hash = "sha256:c33ccba33c819596124764c23a97d25f32b28433ba0dedeb77d873a38722c9bc" },
