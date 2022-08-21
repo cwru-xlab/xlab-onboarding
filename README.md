@@ -24,9 +24,9 @@ library is used to implement a custom
 Flask-Security [UserModel, RoleModel](https://flask-security-too.readthedocs.io/en/stable/models.html#models-topic)
 ,
 [Datastore, and UserDatastore](https://flask-security-too.readthedocs.io/en/stable/api.html#datastores)
-. User data (i.e., inbox emails) is stored in Dataswift Personal Data Accounts (
-PDAs). PDA data is modeled and accessed using
-an [unofficial Python SDK](https://github.com/rtatton/hat-py-sdk), which
+. User data (i.e., inbox emails) is stored in [Dataswift](https://dataswift.io/)
+Personal Data Accounts (PDAs). PDA data is modeled and accessed using an
+[unofficial Python SDK](https://github.com/rtatton/hat-py-sdk), which
 utilizes [Pydantic](https://pydantic-docs.helpmanual.io/)
 . [Pydantic](https://pydantic-docs.helpmanual.io/usage/settings/) is also used
 to handle xMail app configuration. The xMail inbox page
