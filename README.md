@@ -1,5 +1,7 @@
 # xlab-onboarding
 
+## Overview
+
 Onboarding project for the xLab Design and Innovation course.
 
 xMail is a simple email client web app prototype with the following features:
