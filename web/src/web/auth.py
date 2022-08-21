@@ -68,10 +68,10 @@ class RedisUserDatastore(UserDatastore, RedisDatastore):
 
     def __init__(
             self,
-            user: Type[RedisUser] = RedisUser,
-            role: Type[RedisUser] = RedisRole
+            user_type: Type[RedisUser] = RedisUser,
+            role_type: Type[RedisUser] = RedisRole
     ) -> None:
-        super().__init__(user_model=user, role_model=role)
+        super().__init__(user_type, role_type)
 
     def find_user(self, **kwargs) -> Optional[RedisUser]:
         if kwargs.pop("case_insensitive", False):

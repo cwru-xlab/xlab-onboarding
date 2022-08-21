@@ -7,7 +7,6 @@ import flask
 import flask_security as fs
 from flask import Response
 from flask.typing import ErrorHandlerCallable
-from hat import client
 from pydantic import EmailStr
 
 import auth
@@ -125,7 +124,3 @@ def current_user_address() -> EmailStr:
 
 def current_user() -> str:
     return fs.current_user.username
-
-
-def hat_client() -> client.HatClient:
-    return flask.current_app.config.HAT_CLIENT
