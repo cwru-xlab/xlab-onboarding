@@ -56,7 +56,7 @@ also be of use:
 - [FastAPI](https://fastapi.tiangolo.com/): quickly implement synchronous and
   asynchronous APIs in Python with Pydantic support
 - [SQLModel](https://sqlmodel.tiangolo.com/): combines Pydantic
-  and [SQLAlchemy](https://www.sqlalchemy.org/) for an even powerful ORM
+  and [SQLAlchemy](https://www.sqlalchemy.org/) for an even more powerful ORM
 - [_Git from the Bottom Up_](https://jwiegley.github.io/git-from-the-bottom-up/)
 
 ## Additional links
