@@ -37,22 +37,16 @@ def make_app() -> flask.Flask:
     @app.route("/inbox", methods=["GET", "POST"])
     @fs.auth_required()
     def inbox() -> str | Response:
-        get = flask.request.method == "GET"
         emails = get_emails()
         delete = forms.DeleteEmailsForm(emails)
         compose = forms.ComposeEmailForm(security.datastore)
-        if not get and delete.validate_on_submit():
+        if is_delete_request(delete):
             result = delete_emails(delete, emails)
         # Only validate if the POST request is actually to send an email.
-        elif not get and in_form("subject") and compose.validate_on_submit():
+        elif is_compose_request(compose):
             result = compose_email(compose)
         else:
-            result = render_template(
-                "inbox.html",
-                emails=list(zip(emails, delete.emails)),
-                delete=delete,
-                compose=compose,
-                current_user=current_user())
+            result = render_inbox(emails, delete, compose)
         return result
 
     return app
@@ -91,8 +85,33 @@ def redirect_to_inbox() -> Response:
     return flask.current_app.redirect(flask.url_for("inbox"))
 
 
+def is_delete_request(form: forms.DeleteEmailsForm) -> bool:
+    return is_post_request() and form.validate_on_submit()
+
+
+def is_compose_request(form: forms.ComposeEmailForm) -> bool:
+    return is_post_request() and in_form("subject") and form.validate_on_submit()
+
+
+def is_post_request() -> bool:
+    return flask.request.method == "POST"
+
+
 def in_form(field: str) -> bool:
     return field in flask.request.form
+
+
+def render_inbox(
+        emails: list[models.Email],
+        delete: forms.DeleteEmailsForm,
+        compose: forms.ComposeEmailForm
+) -> str:
+    return render_template(
+        "inbox.html",
+        emails=list(zip(emails, delete.emails)),
+        delete=delete,
+        compose=compose,
+        current_user=current_user())
 
 
 def render_template(path: str, **context) -> str:
