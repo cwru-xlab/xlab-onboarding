@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "web"
+name = "xmail"
 version = "0.1.0"
 description = ""
 authors = ["rtatton <rtatton17@proton.me>"]
