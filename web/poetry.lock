@@ -700,7 +700,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "3715c3890c9a296494d7543741af78dee4bb3df6efca35a1460fcccd081eba5d"
+content-hash = "223c3120065aa68812ac3ab407ff1af285244c3ef1232409aece33566e15dc2b"
 
 [metadata.files]
 aioredis = [
