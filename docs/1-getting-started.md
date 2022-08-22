@@ -1,13 +1,27 @@
 # Getting started
 
-**Note:** While this project is meant to be an onboarding exercise, it does
-introduce several development tools and libraries, i.e., this is more than just
-another "Hello world" example. With this in mind, it is recommended that you
-read through any linked documentation about the libraries or tools to get the
-best understanding about what they do, what value they provide, and how to use
-them. There is an abundance of information about all the libraries and tools
-used in this project, so no effort is made to restate what is already explained
+## Objectives
+
+- Install Python and Poetry
+- Install Docker
+- Clone this repository
+- Try out the application
+
+## Remarks
+
+While this project is meant to be an onboarding exercise, it does introduce
+several development tools and libraries, i.e., this is more than just another "
+Hello world" example. With this in mind, it is recommended that you read through
+any linked documentation about the libraries or tools to get the best
+understanding about what they do, what value they provide, and how to use them.
+There is an abundance of information about all the libraries and tools used in
+this project, so no effort is made to restate what is already explained
 thoroughly by external sources.
+
+This course does assume you are familiar with Python 3 and general software
+development knowledge.
+
+## Install the essentials
 
 As with most software projects, the first thing we need to do is install some
 tools we will need for development. Please follow the first six sections of
@@ -21,6 +35,8 @@ Once you have Python and a Poetry virtual environment setup, head over to
 the [Docker](https://www.docker.com/get-started/) website to install Docker
 Desktop. Please see the [Docker documentation](https://docs.docker.com/) to
 learn more about containers.
+
+## Run the application
 
 At this point, you have all you need to run this repo to see the final product.
 Simply start Docker, go to the root directory of this project and run
