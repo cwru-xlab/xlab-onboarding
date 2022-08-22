@@ -41,7 +41,6 @@ def make_app() -> flask.Flask:
         compose = forms.ComposeEmailForm(security.datastore)
         if is_delete_request(delete):
             result = delete_emails(delete, emails)
-        # Only validate if the POST request is actually to send an email.
         elif is_compose_request(compose):
             result = compose_email(compose)
         else:
@@ -89,6 +88,7 @@ def is_delete_request(form: forms.DeleteEmailsForm) -> bool:
 
 
 def is_compose_request(form: forms.ComposeEmailForm) -> bool:
+    # Only validate if the POST request is actually to send an email.
     return is_post_request() and in_form("subject") and form.validate_on_submit()
 
 
