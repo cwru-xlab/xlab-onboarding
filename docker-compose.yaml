@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   web:
+    container_name: xmail-web
     build:
       context: .
       target: app
@@ -20,6 +21,7 @@ services:
     environment:
       REDIS_OM_URL: redis://db:6379
   db:
+    container_name: xmail-db
     image: redis/redis-stack:6.2.2-v5
     restart: always
     ports:
