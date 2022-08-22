@@ -260,7 +260,7 @@ email = ["email-validator"]
 
 [[package]]
 name = "hat-py-sdk"
-version = "0.30.2"
+version = "0.30.4"
 description = ""
 category = "main"
 optional = false
@@ -287,8 +287,8 @@ ulid = ["python-ulid (>=1.1.0,<2.0.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/rtatton/hat-py-sdk"
-reference = "v0.30.2"
-resolved_reference = "2d102677aee77697bb61ab42dba882c3becf0d7a"
+reference = "v0.30.4"
+resolved_reference = "6dc4f7db3bf075725a9204c9cbc2f33d6c297b93"
 
 [[package]]
 name = "hiredis"
@@ -468,10 +468,10 @@ python-versions = ">=3.6"
 cryptography = { version = ">=3.3.1", optional = true, markers = "extra == \"crypto\"" }
 
 [package.extras]
-tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
-docs = ["zope.interface", "sphinx-rtd-theme", "sphinx"]
-dev = ["pre-commit", "mypy", "coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)", "cryptography (>=3.3.1)", "zope.interface", "sphinx-rtd-theme", "sphinx"]
 crypto = ["cryptography (>=3.3.1)"]
+dev = ["sphinx", "sphinx-rtd-theme", "zope.interface", "cryptography (>=3.3.1)", "pytest (>=6.0.0,<7.0.0)", "coverage[toml] (==5.0.4)", "mypy", "pre-commit"]
+docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
+tests = ["pytest (>=6.0.0,<7.0.0)", "coverage[toml] (==5.0.4)"]
 
 [[package]]
 name = "pylev"
@@ -598,7 +598,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "types-redis"
-version = "4.3.16"
+version = "4.3.17"
 description = "Typing stubs for redis"
 category = "main"
 optional = false
@@ -622,7 +622,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "urllib3"
-version = "1.26.11"
+version = "1.26.12"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
@@ -630,7 +630,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, 
 
 [package.extras]
 brotli = ["brotlicffi (>=0.8.0)", "brotli (>=1.0.9)", "brotlipy (>=0.6.0)"]
-secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
+secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "urllib3-secure-extra", "ipaddress"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
@@ -700,7 +700,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "509e9382007faf4e941667affd00ae93327d6b5c01cc3f3272f0f25e8c6780d6"
+content-hash = "3fdb29632a53b4fdecc886b073403fc41d0db213a2cdbbee20a866786683d3ab"
 
 [metadata.files]
 aioredis = [
@@ -1119,8 +1119,8 @@ six = [
     { file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926" },
 ]
 types-redis = [
-    { file = "types-redis-4.3.16.tar.gz", hash = "sha256:ed53e35eac4303ef70cf7f5c205e210f2238b7fdd9306b7f8676669c1070943e" },
-    { file = "types_redis-4.3.16-py3-none-any.whl", hash = "sha256:41da87dc80f39573a71873e4265f181d9628b0a2a862e850ecc896a0cd6cacd2" },
+    { file = "types-redis-4.3.17.tar.gz", hash = "sha256:03b023c08acf344f4f0821cc1c7e4dbecb7b17bc5483927c3e73d80f7fe1768e" },
+    { file = "types_redis-4.3.17-py3-none-any.whl", hash = "sha256:a34c4e7aafa4b2fb9090d3a7f3ad0ac969089c7b4a05c21dff593a0c37405916" },
 ]
 types-six = [
     { file = "types-six-1.16.18.tar.gz", hash = "sha256:26f481fabb65321ba428bdfb82c97fc638e00be6b20efa83915b007cf3893e28" },
@@ -1131,8 +1131,8 @@ typing-extensions = [
     { file = "typing_extensions-4.3.0.tar.gz", hash = "sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6" },
 ]
 urllib3 = [
-    { file = "urllib3-1.26.11-py2.py3-none-any.whl", hash = "sha256:c33ccba33c819596124764c23a97d25f32b28433ba0dedeb77d873a38722c9bc" },
-    { file = "urllib3-1.26.11.tar.gz", hash = "sha256:ea6e8fb210b19d950fab93b60c9009226c63a28808bc8386e05301e25883ac0a" },
+    { file = "urllib3-1.26.12-py2.py3-none-any.whl", hash = "sha256:b930dd878d5a8afb066a637fbb35144fe7901e3b209d1cd4f524bd0e9deee997" },
+    { file = "urllib3-1.26.12.tar.gz", hash = "sha256:3fa96cf423e6987997fc326ae8df396db2a8b7c667747d47ddd8ecba91f4a74e" },
 ]
 webencodings = [
     { file = "webencodings-0.5.1-py2.py3-none-any.whl", hash = "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78" },
