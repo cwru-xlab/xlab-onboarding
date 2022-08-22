@@ -19,7 +19,7 @@ zxcvbn = "^4.4.28"
 [tool.poetry.dependencies.hat-py-sdk]
 git = "https://github.com/rtatton/hat-py-sdk"
 extras = ["sync", "orjson", "ulid"]
-rev = "v0.31.0"
+rev = "v0.31.1"
 
 [tool.poetry.dev-dependencies]
 
