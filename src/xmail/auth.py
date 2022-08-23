@@ -5,11 +5,10 @@ import warnings
 from typing import Any, Optional, Type, TypeVar, Union, cast
 
 import flask
-import flask_security as fs
-import redis_om
-from flask_security.datastore import Datastore, UserDatastore
+from flask_security import RoleMixin, Security, UserDatastore, UserMixin
+from flask_security.datastore import Datastore
 from pydantic import StrictBool, StrictStr, conlist
-from redis_om import Field, JsonModel, RedisModel
+from redis_om import Field, JsonModel, Migrator, RedisModel
 
 import forms
 
@@ -20,20 +19,20 @@ Permissions = Optional[Union[str, set[str], conlist(str, unique_items=True)]]
 def migrate(model: T) -> T:
     @functools.wraps(model)
     def migrated():
-        redis_om.Migrator().run()
+        Migrator().run()
         return model
 
     return migrated()
 
 
 @migrate
-class RedisRole(JsonModel, fs.RoleMixin):
+class RedisRole(JsonModel, RoleMixin):
     name: StrictStr = Field(index=True)
     permissions: Permissions = set()
 
 
 @migrate
-class RedisUser(JsonModel, fs.UserMixin):
+class RedisUser(JsonModel, UserMixin):
     fs_uniquifier: StrictStr = Field(index=True)
     username: StrictStr = Field(index=True)
     password: StrictStr
@@ -97,8 +96,8 @@ class RedisUserDatastore(UserDatastore, RedisDatastore):
         return result[0] if result else None
 
 
-def init_app() -> fs.Security:
-    return fs.Security(
+def init_app() -> Security:
+    return Security(
         app=flask.current_app,
         datastore=RedisUserDatastore(),
         register_form=forms.UsernameRegisterForm)
