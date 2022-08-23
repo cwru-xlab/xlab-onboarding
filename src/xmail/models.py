@@ -16,8 +16,7 @@ class EmailHeaders(pydantic.BaseModel):
     subject: constr(strip_whitespace=True, strict=True)
     date: datetime.datetime = datetime_field()
 
-    class Config(model.HatConfig):
-        fields = {"sender": "from"}
+    Config = model.HatConfig
 
     @property
     def short_date(self) -> str:
