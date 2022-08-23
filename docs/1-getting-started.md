@@ -4,8 +4,8 @@
 
 - Install Python and Poetry
 - Install Docker
-- Clone this repository
-- Try out the application
+- Clone AppSeed Volt Dashboard repo and copy over assets
+- Write Dockerfile and Docker Compose config file
 
 ## Remarks
 
