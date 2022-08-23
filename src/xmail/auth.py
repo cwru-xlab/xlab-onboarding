@@ -7,7 +7,6 @@ from typing import Any, Optional, Type, TypeVar, Union, cast
 import flask
 import flask_security as fs
 import redis_om
-from flask_security import RoleMixin, UserMixin
 from flask_security.datastore import Datastore, UserDatastore
 from pydantic import StrictBool, StrictStr, conlist
 from redis_om import Field, JsonModel, RedisModel
@@ -28,13 +27,13 @@ def migrate(model: T) -> T:
 
 
 @migrate
-class RedisRole(JsonModel, RoleMixin):
+class RedisRole(JsonModel, fs.RoleMixin):
     name: StrictStr = Field(index=True)
     permissions: Permissions = set()
 
 
 @migrate
-class RedisUser(JsonModel, UserMixin):
+class RedisUser(JsonModel, fs.UserMixin):
     fs_uniquifier: StrictStr = Field(index=True)
     username: StrictStr = Field(index=True)
     password: StrictStr
