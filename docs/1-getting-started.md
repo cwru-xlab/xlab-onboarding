@@ -77,6 +77,10 @@ These two files were based on the following sources:
       ["Using Poetry"](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker#using-poetry)
       from a related Docker image GitHub repo.
 
+For more information about Redis Stack,
+see [this page](https://developer.redis.com/create/redis-stack/) from the Redis
+documentation.
+
 ## AppSeed
 
 This project utilizes
