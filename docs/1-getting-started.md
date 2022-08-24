@@ -27,9 +27,10 @@ As with most software projects, the first thing we need to do is install some
 tools that we will need for development. Please follow the first six sections of
 the [first chapter](https://cjolowicz.github.io/posts/hypermodern-python-01-setup)
 of the "Hypermodern Python" blog. After reading those sections you should have
-Python and Poetry installed. Creating a GitHub repo is not necessary for this
-project, but may be of help. If you still want to track any changes, you can
-also just [install Git](https://git-scm.com/) without creating a GitHub repo.
+Python and [Poetry](https://python-poetry.org/docs/) installed. Creating a
+GitHub repo is not necessary for this project, but may be of help. If you still
+want to track any changes, you can also just [install Git](https://git-scm.com/)
+without creating a GitHub repo.
 
 Once you have Python and a Poetry virtual environment
 setup, [install Docker](https://www.docker.com/get-started/). Please see
@@ -75,3 +76,9 @@ These two files were based on the following sources:
     - And
       ["Using Poetry"](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker#using-poetry)
       from a related Docker image GitHub repo.
+
+## AppSeed
+
+This project utilizes
+the [AppSeed Flask Bootstrap 5 Volt Dashboard](https://appseed.us/product/volt-dashboard/flask/)
+to implement the web frontend.
