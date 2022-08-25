@@ -56,7 +56,7 @@ class RedisDatastore(Datastore):
         return cast(Model, model.save())
 
     def delete(self, model: Model) -> None:
-        Model.delete(model.pk)
+        model.delete(model.pk)
 
 
 class RedisUserDatastore(UserDatastore, RedisDatastore):
