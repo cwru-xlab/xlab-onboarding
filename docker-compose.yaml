@@ -2,12 +2,11 @@ version: "3.9"
 
 services:
   web:
-    container_name: xmail-web
     build:
       context: .
       target: app
     ports:
-      - "8000:8000" # Right-hand port must match the Dockerfile
+      - "80:8000" # Right-hand port must match the Dockerfile
     depends_on:
       - db
     links:
@@ -21,12 +20,11 @@ services:
     environment:
       REDIS_OM_URL: redis://db:6379
   db:
-    container_name: xmail-db
     image: redis/redis-stack:6.2.2-v5
     restart: always
     ports:
-      - "6379:6379" # Server
-      - "8001:8001" # RedisInsight
+      - "6378:6379" # Server
+      - "6377:8001" # RedisInsight
     environment:
       REDIS_ARGS: --save 20 1
     volumes:
