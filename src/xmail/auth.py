@@ -8,7 +8,7 @@ import flask
 from flask_security import RoleMixin, Security, UserDatastore, UserMixin
 from flask_security.datastore import Datastore
 from pydantic import StrictBool, StrictStr, conlist
-from redis_om import Field, JsonModel, Migrator, RedisModel
+from redis_om import Field, FindQuery, JsonModel, Migrator, NotFoundError, RedisModel
 
 import forms
 
@@ -74,26 +74,25 @@ class RedisUserDatastore(UserDatastore, RedisDatastore):
     def find_user(self, **kwargs) -> Optional[RedisUser]:
         if kwargs.pop("case_insensitive", False):
             warnings.warn("Redis does not support case-insensitive queries")
-        result = None
         if attrs := self._query_by(set(kwargs)):
-            query = (
-                eval(f"{RedisUser.__name__}.{a}") == kwargs[a] for a in attrs)
-            result = self._first_or_none(RedisUser.find(*query).all())
-        return result
+            query = (eval(f"{RedisUser.__name__}.{a}") == kwargs[a] for a in attrs)
+            return self._first_or_none(RedisUser.find(*query))
 
     def _query_by(self, requested: set[str]) -> set[str]:
         query_by = requested & self._supported
         if invalid := requested - self._supported:
-            warnings.warn(
-                f"Invalid query attributes {invalid}; querying by {query_by}")
+            warnings.warn(f"Invalid query attributes {invalid}; querying by {query_by}")
         return query_by
 
     def find_role(self, role: str) -> Optional[RedisRole]:
-        return self._first_or_none(RedisRole.find(RedisRole.name == role).all())
+        return self._first_or_none(RedisRole.find(RedisRole.name == role))
 
     @staticmethod
-    def _first_or_none(result: list[Model]) -> Optional[Model]:
-        return result[0] if result else None
+    def _first_or_none(result: FindQuery) -> Optional[Model]:
+        try:
+            return result.first()
+        except NotFoundError:
+            return None
 
 
 def init_app() -> Security:
