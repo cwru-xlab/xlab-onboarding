@@ -11,6 +11,15 @@
   - Flask-Security
 - Implement the data classes needed for Flask-Security and xMail
 
+### Remarks
+
+As with the previous module, this module requires a lot of learning new
+libraries and concepts. In fact, this is probably the most demanding and
+important module for the technical component of the course. Don't worry if
+everything does not make sense on first read; it's a lot of new stuff. Just
+getting exposed to what all this course involves will help prepare you for the
+real work you will be doing for the course.
+
 ## Dataswift
 
 ### What is Dataswift?
