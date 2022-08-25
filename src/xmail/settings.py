@@ -53,8 +53,7 @@ class Settings(pydantic.BaseSettings):
     SECURITY_USERNAME_ENABLE: StrictBool = True
     SECURITY_USERNAME_REQUIRED: StrictBool = True
     SECURITY_USER_IDENTITY_ATTRIBUTES: conlist(IdAttr) = [
-        id_attr(
-            "username", mapper=fs.uia_username_mapper, case_insensitive=False)]
+        id_attr("username", mapper=fs.uia_username_mapper, case_insensitive=False)]
     SECURITY_REDIRECT_VALIDATE_MODE: StrictStr = "regex"
     # Overrides default secure = False to require HTTPS.
     SECURITY_CSRF_COOKIE: dict[StrictStr, Any] = {
@@ -77,21 +76,22 @@ class Settings(pydantic.BaseSettings):
         return client.HatClient(http_client, token, self.hat_namespace)
 
     def hat_credential(self) -> Credential:
-        class HatCredential(Credential):
-            __slots__ = "_settings"
-
-            def __init__(self, settings: Settings):
-                self._settings = settings
-
-            @property
-            def username(self) -> str:
-                return self._settings.hat_username
-
-            @property
-            def password(self) -> str:
-                return self._settings.hat_password
-
         return HatCredential(self)
+
+
+class HatCredential(Credential):
+    __slots__ = "_settings"
+
+    def __init__(self, settings: Settings):
+        self._settings = settings
+
+    @property
+    def username(self) -> str:
+        return self._settings.hat_username
+
+    @property
+    def password(self) -> str:
+        return self._settings.hat_password
 
 
 class AttrConfig(flask.Config):
