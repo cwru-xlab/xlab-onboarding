@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+import functools
 import os
 from typing import Iterable
 
 import flask
 import flask_security as fs
 from flask import Response
-from flask.typing import ErrorHandlerCallable
 from pydantic import EmailStr
 
 import auth
@@ -21,7 +21,7 @@ def make_app() -> flask.Flask:
         settings.init_app()  # Run early on to load configuration.
         security = auth.init_app()
         for code in (403, 404, 500):
-            app.register_error_handler(code, error_handler(code))
+            register_error_handler(code)
 
     @app.route("/")
     def root() -> Response:
@@ -75,8 +75,9 @@ def delete_emails(
     return redirect_to_inbox()
 
 
-def error_handler(code: int) -> ErrorHandlerCallable:
-    return lambda e: (render_template(f"{code}.html"), code)
+def register_error_handler(code: int) -> None:
+    handler = functools.partial(lambda e: (render_template(f"{code}.html"), code))
+    flask.current_app.register_error_handler(code, handler)
 
 
 def redirect_to_inbox() -> Response:
