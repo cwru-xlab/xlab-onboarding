@@ -4,7 +4,7 @@ import flask
 import flask_security as fs
 import pydantic
 from hat import client
-from keyring.credentials import Credential
+from keyring import credentials
 from pydantic import DirectoryPath, StrictBool, StrictStr, conlist
 
 
@@ -72,23 +72,9 @@ class Settings(pydantic.BaseSettings):
     @property
     def HAT_CLIENT(self) -> client.HatClient:
         http_client = client.HttpClient()
-        token = client.CredentialOwnerToken(http_client, HatCredential(self))
+        credential = credentials.SimpleCredential(self.hat_username, self.hat_password)
+        token = client.CredentialOwnerToken(http_client, credential)
         return client.HatClient(http_client, token, self.hat_namespace)
-
-
-class HatCredential(Credential):
-    __slots__ = "_settings"
-
-    def __init__(self, settings: Settings):
-        self._settings = settings
-
-    @property
-    def username(self) -> str:
-        return self._settings.hat_username
-
-    @property
-    def password(self) -> str:
-        return self._settings.hat_password
 
 
 class AttrConfig(flask.Config):
