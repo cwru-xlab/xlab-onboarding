@@ -24,10 +24,10 @@ As with most software projects, the first thing we need to do is install some to
 need for development. Please follow the first six sections of
 the [first chapter](https://cjolowicz.github.io/posts/hypermodern-python-01-setup)
 of the "Hypermodern Python" blog. After reading those sections you should have Python
-and [Poetry](https://python-poetry.org/docs/) installed. Creating a GitHub repo is not necessary for
-this project, but may be of help. If you still want to track any changes, you can also
-just [install Git](https://git-scm.com/)
-without creating a GitHub repo.
+and [Poetry](https://python-poetry.org/docs/) installed
+(see below for expected directory structure). Creating a GitHub repo is not necessary for this
+project, but may be of help. If you still want to track any changes, you can also
+just [install Git](https://git-scm.com/)without creating a GitHub repo.
 
 Once you have Python and a Poetry virtual environment
 setup, [install Docker](https://www.docker.com/get-started/). Please see
@@ -48,10 +48,33 @@ app and another for the Redis database. Please refer to the Docker documentation
 command in that config file means. When building the `web` service, Docker looks at the Dockerfile
 and runs those commands.
 
-Open up a web browser and go to `localhost:8000`. You should see a login page for the xMail email
-web client. Try to make an account, login, send emails, and delete them. It is only possible to send
+Open up a web browser and go to `localhost:80`. You should see a login page for the xMail email web
+client. Try to make an account, login, send emails, and delete them. It is only possible to send
 emails to existing xMail users, so you can either create multiple accounts or just send emails to
 yourself. This is the final product we are going to be building.
+
+## xMail implementation
+
+Go to the [Jinja Volt Dashboard](https://github.com/app-generator/jinja-volt-dashboard) GitHub repo
+and clone the repo into a directory that you will be using for this project. Create an
+`xmail` directory and copy over the
+[`static` and `templates` directories](https://github.com/app-generator/jinja-volt-dashboard/tree/master/apps)
+from the cloned AppSeed repo. At this point, your directory should look something like this
+
+```
+xmail
+│   Dockerfile
+│   docker-compose.yaml
+|   secrets.env
+│   pyproject.toml
+│   poetry.lock
+|   .python-version
+└── src
+│   └── xmail
+│       │   __init__.py
+│       └── static
+│       └── templates
+```
 
 ## Dockerfile and Docker Compose config file
 
