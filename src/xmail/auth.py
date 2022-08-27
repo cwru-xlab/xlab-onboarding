@@ -5,8 +5,7 @@ import warnings
 from typing import Any, Optional, Type, TypeVar, Union, cast
 
 import flask
-from flask_security import RoleMixin, Security, UserDatastore, UserMixin
-from flask_security.datastore import Datastore
+import flask_security as fs
 from pydantic import StrictBool, StrictStr, conlist
 from redis_om import Field, FindQuery, JsonModel, Migrator, NotFoundError, RedisModel
 
@@ -26,31 +25,28 @@ def migrate(model: T) -> T:
 
 
 @migrate
-class RedisRole(JsonModel, RoleMixin):
+class RedisRole(JsonModel, fs.RoleMixin):
     name: StrictStr = Field(index=True)
     permissions: Permissions = set()
 
 
 @migrate
-class RedisUser(JsonModel, UserMixin):
+class RedisUser(JsonModel, fs.UserMixin):
     fs_uniquifier: StrictStr = Field(index=True)
     username: StrictStr = Field(index=True)
     password: StrictStr
     active: StrictBool = True
     roles: conlist(RedisRole, unique_items=True) = []
 
-    def get_security_payload(self) -> dict[str, Any]:
-        return self.dict()
-
 
 Model = TypeVar("Model", bound=Union[RedisUser, RedisRole])
 
 
-class RedisDatastore(Datastore):
+class RedisDatastore(fs.datastore.Datastore):
     __slots__ = ()
 
     def __init__(self, *args, **kwargs):
-        super().__init__(None)
+        super(RedisDatastore, self).__init__(None)
 
     def put(self, model: Model) -> Model:
         return cast(Model, model.save())
@@ -59,19 +55,19 @@ class RedisDatastore(Datastore):
         model.delete(model.pk)
 
 
-class RedisUserDatastore(UserDatastore, RedisDatastore):
+class RedisUserDatastore(fs.UserDatastore, RedisDatastore):
     __slots__ = ()
 
     _supported = {"username", "fs_uniquifier"}
 
     def __init__(
             self,
-            user_type: Type[RedisUser] = RedisUser,
-            role_type: Type[RedisUser] = RedisRole
+            user_model: Type[RedisUser] = RedisUser,
+            role_model: Type[RedisRole] = RedisRole
     ) -> None:
-        super().__init__(user_type, role_type)
+        super().__init__(user_model, role_model)
 
-    def find_user(self, **kwargs) -> Optional[RedisUser]:
+    def find_user(self, **kwargs: Any) -> RedisUser | None:
         if kwargs.pop("case_insensitive", False):
             warnings.warn("Redis does not support case-insensitive queries")
         if attrs := self._query_by(set(kwargs)):
@@ -84,19 +80,18 @@ class RedisUserDatastore(UserDatastore, RedisDatastore):
             warnings.warn(f"Invalid query attributes {invalid}; querying by {query_by}")
         return query_by
 
-    def find_role(self, role: str) -> Optional[RedisRole]:
+    def find_role(self, role: str) -> RedisRole | None:
         return self._first_or_none(RedisRole.find(RedisRole.name == role))
 
     @staticmethod
-    def _first_or_none(result: FindQuery) -> Optional[Model]:
+    def _first_or_none(result: FindQuery) -> Model | None:
         try:
             return result.first()
         except NotFoundError:
             return None
 
 
-def init_app() -> Security:
-    return Security(
-        app=flask.current_app,
-        datastore=RedisUserDatastore(),
-        register_form=forms.UsernameRegisterForm)
+def init_app() -> fs.Security:
+    security = fs.Security(register_form=forms.UsernameRegisterForm)
+    security.init_app(flask.current_app, RedisUserDatastore())
+    return security
