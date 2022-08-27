@@ -83,8 +83,11 @@ class AttrConfig(flask.Config):
     def __init__(self, root_path: str, **kwargs) -> None:
         super().__init__(root_path, **kwargs)
 
-    def __getattr__(self, attr: str) -> Any:
+    def __getattr__(self, key: str) -> Any:
         try:
-            return self[attr]
+            return self[key.upper()]
         except KeyError:
-            raise AttributeError(f"Invalid config option: {attr}")
+            raise AttributeError(f"Invalid config option: {key}")
+
+    def __setattr__(self, key: str, value: Any) -> None:
+        self[key.upper()] = value
