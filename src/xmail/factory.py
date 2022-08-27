@@ -57,13 +57,10 @@ def get_emails() -> list[models.Email]:
 
 
 def compose_email(form: forms.ComposeEmailForm) -> Response:
-    email = models.Email(
-        headers=models.EmailHeaders(
-            to=form.to.data,
-            sender=current_user_address(),
-            subject=form.subject.data),
-        body=form.body.data)
-    email.save(form.username)
+    headers = models.EmailHeaders(
+        to=form.to.data, sender=current_user_address(), subject=form.subject.data)
+    email = models.Email(headers=headers, body=form.body.data)
+    email.save(form.recipient_username)
     return redirect_to_inbox()
 
 

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Iterable
 
 import flask
@@ -46,28 +44,30 @@ class ComposeEmailForm(flask_wtf.FlaskForm):
     body = wtforms.TextAreaField()
     submit = wtforms.SubmitField("Send")
 
-    def __init__(self, users: UserDatastore, *args, **kwargs):
+    def __init__(self, users: UserDatastore, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.users = users
 
-    def validate(self, *args, **kwargs):
+    def validate(self, *args, **kwargs) -> bool:
         if result := super().validate(*args, **kwargs):
-            domain = flask.current_app.config.EMAIL_DOMAIN
-            if not (result := self.domain == domain):
-                self.to.errors.append(f"Email domain must be {domain}")
-            elif not (result := self.users.find_user(username=self.username)):
+            if not (result := self.recipient_domain == (expected := email_domain())):
+                self.to.errors.append(f"Email domain must be {expected}")
+            elif not (result := self.users.find_user(username=self.recipient_username)):
                 self.to.errors.append(f"{self.to.data} does not exist")
         return result
 
     @property
-    def username(self) -> str:
+    def recipient_username(self) -> str:
         return self.to.data.split("@")[0]
 
     @property
-    def domain(self) -> str:
-        return self.to.data.split("@")[-1]
+    def recipient_domain(self) -> str:
+        return self.to.data.split("@")[1]
 
 
 def format_address(username: str) -> pydantic.EmailStr:
-    domain = flask.current_app.config.EMAIL_DOMAIN
-    return pydantic.EmailStr(f"{username}@{domain}")
+    return pydantic.EmailStr(f"{username}@{email_domain()}")
+
+
+def email_domain() -> str:
+    return flask.current_app.config.EMAIL_DOMAIN
