@@ -31,7 +31,7 @@ class DeleteEmailsForm(flask_wtf.FlaskForm):
         super().__init__(*args, **kwargs)
         self.emails.choices = [e.uid for e in emails]
 
-    def validate_on_submit(self, *args, **kwargs):
+    def validate(self, *args, **kwargs):
         if result := super().validate(*args, **kwargs):
             result = bool(self.emails.data)
         return result
