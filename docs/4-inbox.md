@@ -17,9 +17,9 @@ already. To make matters more complicated, actually allowing users to send and r
 server and domain. While we could achieve all of this using a combination of AWS Lambda, Amazon SES, and Amazon Route53,
 this kind of functionality is _way_ beyond the scope of this onboarding project.
 
-To keep things simple, and true to the idea that this is only a prototype, we will only use a _single_ PDA to store _
-all_ users' data. That is, for a given application namespace (e.g., `xmail`), we can assign each user an endpoint (
-i.e., `xmail/<username>`) and store their emails here. We will limit ourselves to this endpoint, rather than creating
+To keep things simple, and true to the idea that this is only a prototype, we will only use a _single_ PDA to store _all_ 
+users' data. That is, for a given application namespace (e.g., `xmail`), we can assign each user an endpoint (
+i.e., `<namespace>/<username>`) and store their emails here. We will limit ourselves to this endpoint, rather than creating
 sub-endpoints to further organize the user's emails (e.g., spam, deleted, user-created folders, etc.).
 
 The ability to send and delete emails will thus be implemented as follows:
