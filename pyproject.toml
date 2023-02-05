@@ -17,7 +17,7 @@ redis-om = "^0.0.27"
 zxcvbn = "^4.4.28"
 
 [tool.poetry.dependencies.hat-py-sdk]
-git = "https://github.com/rtatton/hat-py-sdk"
+git = "https://github.com/cwru-xlab/hat-py-sdk"
 extras = ["sync", "orjson", "ulid"]
 rev = "v0.31.1"
 
